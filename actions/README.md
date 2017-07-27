@@ -1,1 +1,1 @@
-Actions uses multiple models to do some tasks.
+Actions use multiple models to do some tasks.
