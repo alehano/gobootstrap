@@ -1,8 +1,10 @@
-// Wrapper for Memcached
+/*
+Wrapper for Memcached
+  */
 package memcached
 
 import (
-	"github.com/alehano/config"
+	"github.com/alehano/gobootstrap/config"
 	"github.com/alehano/gohelpers/compress"
 	"encoding/json"
 	"fmt"

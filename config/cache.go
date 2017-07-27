@@ -1,8 +1,6 @@
-/*
-Centralized storage for cache keys
- */
 package config
 
+// Centralized storage for cache keys
 var CacheKeys = cacheKeys{}
 
 type cacheKeys struct{}
