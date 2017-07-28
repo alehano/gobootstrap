@@ -1,4 +1,6 @@
-// Publish-Subscriber service
+/*
+Publish-Subscriber local service
+  */
 package pubsub
 
 import "time"

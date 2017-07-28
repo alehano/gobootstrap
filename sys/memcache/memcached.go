@@ -20,19 +20,23 @@ const (
 	GzipCompressFlag   uint32 = 2
 )
 
-var mc = memcache.New(config.Get().MemcachedAddr...)
+var (
+	// Inited memcached Client
+	mc = memcache.New(config.Get().MemcachedAddr...)
 
-var compressMethods = map[uint32]string{
-	SnappyCompressFlag: "snappy",
-	GzipCompressFlag: "gz",
-}
+	compressMethods = map[uint32]string{
+		SnappyCompressFlag: "snappy",
+		GzipCompressFlag:   "gz",
+	}
 
-var NoExpiration = 0
-var Expiration15m = int32((15 * time.Minute).Seconds())
-var Expiration1h = int32((time.Hour).Seconds())
-var Expiration24h = int32((24 * time.Hour).Seconds())
-var Expiration3d = int32((3 * 24 * time.Hour).Seconds())
-var Expiration30d = int32((30 * 24 * time.Hour).Seconds())
+	// Predefined expiration time
+	NoExpiration  = 0
+	Expiration15m = int32((15 * time.Minute).Seconds())
+	Expiration1h  = int32((time.Hour).Seconds())
+	Expiration24h = int32((24 * time.Hour).Seconds())
+	Expiration3d  = int32((3 * 24 * time.Hour).Seconds())
+	Expiration30d = int32((30 * 24 * time.Hour).Seconds())
+)
 
 // Using when need expiration > 30d
 func SetExpiration(dur time.Duration) int32 {
