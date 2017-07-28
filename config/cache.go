@@ -5,8 +5,6 @@ var CacheKeys = cacheKeys{}
 
 type cacheKeys struct{}
 
-func (c cacheKeys) Foo(bar string) string {
+func (c cacheKeys) Example(id int) string {
 	return "TODO"
 }
-
-func (c cacheKeys) Foo2() string { return "TODO" }
