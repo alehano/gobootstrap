@@ -102,10 +102,7 @@ func RunVerbose(name string, logFn func(string), errFn func(error)) {
 }
 
 func CheckAndRun() {
-	commandInfo := `Run command by a name
-	E.g. -run version
-	---------
-`
+	commandInfo := "Run command by a name\n\tE.g. -run version\n\t-----------------\n"
 	for _, info := range GetAllCommandsInfo() {
 		commandInfo += fmt.Sprintf("\t%s\n", info)
 	}
