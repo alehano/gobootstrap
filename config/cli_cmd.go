@@ -1,4 +1,8 @@
 package config
 
-// TODO: Centralized storage for cli command names
-
+// Centralized storage for CLI command names
+const (
+	VersionCLI    = "version"
+	DBInitAllCLI  = "db_init_all"
+	ConfigInitCLI = "config_init"
+)

@@ -6,11 +6,11 @@ import (
 )
 
 func init() {
-	cli.RegisterCLI("version", "Get App version", func() error {
+	cli.RegisterCLI(VersionCLI, "Get App version", func() error {
 		fmt.Println(Version)
 		return nil
 	})
 
-	cli.RegisterCLI("config_init",
+	cli.RegisterCLI(ConfigInitCLI,
 		fmt.Sprintf("Create default config file (%s)", defaultFilename), CreateDefaultConfigFile)
 }

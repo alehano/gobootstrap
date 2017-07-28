@@ -1,5 +1,11 @@
 package example
 
+import (
+	"github.com/alehano/gobootstrap/sys/pubsub"
+	"github.com/alehano/gobootstrap/config"
+	"github.com/alehano/gobootstrap/sys/memcache"
+)
+
 func NewExampleMan(storage ExampleStorage) Manager {
 	return Manager{storage: storage}
 }
@@ -19,14 +25,20 @@ func (m Manager) Create(item ExampleModel) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+	pubsub.Publish(config.ExampleCreatedMsg, id)
 	return id, nil
 }
 
 func (m Manager) Get(id int) (ExampleModel, error) {
-	data, err := m.storage.Get(id)
-	if err != nil {
-	}
-	return data, nil
+	return m.storage.Get(id)
+}
+
+func (m Manager) GetCached(id int) (ExampleModel, error) {
+	var res ExampleModel
+	err := memcached.GetSetObj(config.CacheKeys.ExampleGet(id), &res, func() (interface{}, error) {
+		return m.storage.Get(id)
+	}, memcached.Expiration1h)
+	return res, err
 }
 
 func (m Manager) Update(item ExampleModel) error {
