@@ -1,2 +1,2 @@
 # Go Bootstrap
-Web bootstrap in Go
+Web bootstrap in Go. Focused on decoupling business logic and 

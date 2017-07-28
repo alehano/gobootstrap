@@ -104,7 +104,6 @@ func RunVerbose(name string, logFn func(string), errFn func(error)) {
 func CheckAndRun() {
 	commandInfo := `Run command by a name
 	E.g. -run version
-	Commands:
 	---------
 `
 	for _, info := range GetAllCommandsInfo() {

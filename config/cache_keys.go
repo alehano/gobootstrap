@@ -8,3 +8,5 @@ type cacheKeys struct{}
 func (c cacheKeys) Example(id int) string {
 	return "TODO"
 }
+
+// .. add more
