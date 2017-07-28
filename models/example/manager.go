@@ -23,7 +23,10 @@ func (m Manager) Create(item ExampleModel) (int, error) {
 }
 
 func (m Manager) Get(id int) (ExampleModel, error) {
-	return m.storage.Get(id)
+	data, err := m.storage.Get(id)
+	if err != nil {
+	}
+	return data, nil
 }
 
 func (m Manager) Update(item ExampleModel) error {

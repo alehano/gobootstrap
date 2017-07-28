@@ -9,7 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/bradfitz/gomemcache/memcache"
-	"github.com/pkg/errors"
+	"errors"
 	"strconv"
 	"time"
 )

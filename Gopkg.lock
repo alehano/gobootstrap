@@ -1,0 +1,37 @@
+memo = "d071d80bd182f12cd9fb2ee7c355a22c0908377443f03bc6ced1f0f3953cfc53"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/alehano/gohelpers"
+  packages = ["compress"]
+  revision = "eb98525b0837008f8cf0678bd417afa35d3ec5a0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/asaskevich/govalidator"
+  packages = ["."]
+  revision = "866354b2921d468a6463cf1ea2bf00cc597c9aaa"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/bradfitz/gomemcache"
+  packages = ["memcache"]
+  revision = "1952afaa557dc08e8e0d89eafab110fb501c1a2b"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/golang/snappy"
+  packages = ["."]
+  revision = "d9eb7a3d35ec988b8585d4a0068e462c27d28380"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/lib/pq"
+  packages = [".","oid"]
+  revision = "ae7391529ced9c12f06bf01eae33dadb4c70e49f"
+
+[[projects]]
+  branch = "master"
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  revision = "cd8b52f8269e0feb286dfeef29f8fe4d5b397e0b"
