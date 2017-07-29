@@ -36,12 +36,12 @@ func Get() *cfg {
 			filename = fmt.Sprintf("%s/%s", curDir, defaultFilename)
 		}
 		if filename == "" {
-			log.Fatalf("Config filename is empty")
+			log.Fatal("Config filename is empty")
 		}
 
 		err := Load(filename)
 		if err != nil {
-			log.Fatalf("Config didn't load. Error: %s", err)
+			log.Fatalf("Config file didn't load. Error: %s", err)
 		}
 
 	}
@@ -87,7 +87,7 @@ func CreateDefaultConfigFile() error {
 	if err != nil {
 		return err
 	}
-	log.Println("Config file created: ", defaultFilename)
+	log.Printf("Config file created: %s", defaultFilename)
 	return nil
 }
 

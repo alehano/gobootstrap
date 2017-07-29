@@ -94,7 +94,7 @@ func RunVerbose(name string, logFn func(string), errFn func(error)) {
 		for _, f := range cmd.fn {
 			err := f.CLIRun()
 			if err != nil {
-				errFn(errors.New(fmt.Sprintf("CLI Command: %q Error: %s", cmd.name, err)))
+				errFn(errors.New(fmt.Sprintf("CLI Command: %q error: %s", cmd.name, err)))
 			}
 		}
 		logFn(fmt.Sprintf("Finish CLI Command: %q, for: %s", cmd.name, time.Since(start)))

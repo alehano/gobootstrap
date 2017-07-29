@@ -5,11 +5,10 @@ import (
 	"time"
 )
 
-var (
+const (
 	connTimeToReconnect = 5 * time.Second
+	connMaxTries        = 10
 )
-
-const connMaxTries = 10
 
 // Waiting some time (increasing) to reconnect,
 // After n tries fails
