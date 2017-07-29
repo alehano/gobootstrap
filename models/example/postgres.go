@@ -2,7 +2,7 @@ package example
 
 import (
 	"github.com/alehano/gobootstrap/sys/db/postgres"
-	"github.com/alehano/gobootstrap/models/common"
+	"github.com/alehano/gobootstrap/models"
 	"github.com/jmoiron/sqlx"
 	"errors"
 )
@@ -33,29 +33,29 @@ func (s postgresStorage) DBInit() error {
 	    updated_at TIMESTAMP,
 	    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	);`, s.table)
-	return common.WrapPostgresErr(errors.New("TODO"))
+	return models.WrapPostgresErr(errors.New("TODO"))
 }
 
 func (s postgresStorage) Create(item ExampleModel) (int, error) {
 	res, err := s.db.Exec("INSERT INTO $1 (title, updated_at) VALUES ($2, NOW())",
 		s.table, item.Title)
 	if err != nil {
-		return 0, common.WrapPostgresErr(err)
+		return 0, models.WrapPostgresErr(err)
 	}
 	newId, err := res.LastInsertId()
-	return int(newId), common.WrapPostgresErr(err)
+	return int(newId), models.WrapPostgresErr(err)
 }
 
 func (s postgresStorage) Get(id int) (ExampleModel, error) {
 	res := ExampleModel{}
 	err := s.db.Get(&res, "SELECT * FROM $1 WHERE id=$2", s.table, id)
-	return res, common.WrapPostgresErr(err)
+	return res, models.WrapPostgresErr(err)
 }
 
 func (s postgresStorage) Update(item ExampleModel) error {
-	return common.WrapPostgresErr(errors.New("TODO"))
+	return models.WrapPostgresErr(errors.New("TODO"))
 }
 
 func (s postgresStorage) Delete(id int) error {
-	return common.WrapPostgresErr(errors.New("TODO"))
+	return models.WrapPostgresErr(errors.New("TODO"))
 }

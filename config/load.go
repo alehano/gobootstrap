@@ -20,9 +20,6 @@ var (
 
 func Get() *cfg {
 	if !loaded {
-		mu.Lock()
-		defer mu.Unlock()
-
 		// Try to load form ENV
 		var filename string
 		if envFilename := os.Getenv("APP_CONFIG"); envFilename != "" {

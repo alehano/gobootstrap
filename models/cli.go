@@ -1,4 +1,4 @@
-package common
+package models
 
 import (
 	"github.com/alehano/gobootstrap/sys/cli"

@@ -1,4 +1,4 @@
-memo = "d071d80bd182f12cd9fb2ee7c355a22c0908377443f03bc6ced1f0f3953cfc53"
+memo = "a34712c820aa7bf7406be84ab4f1633bfb92127448960933eeed27a8b28b3b13"
 
 [[projects]]
   branch = "master"
@@ -19,10 +19,22 @@ memo = "d071d80bd182f12cd9fb2ee7c355a22c0908377443f03bc6ced1f0f3953cfc53"
   revision = "1952afaa557dc08e8e0d89eafab110fb501c1a2b"
 
 [[projects]]
+  name = "github.com/go-chi/chi"
+  packages = [".","middleware"]
+  revision = "b8567b6442e27704bfeb725095091581cbe82a00"
+  version = "v3.1.4"
+
+[[projects]]
   branch = "master"
   name = "github.com/golang/snappy"
   packages = ["."]
   revision = "d9eb7a3d35ec988b8585d4a0068e462c27d28380"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/jmoiron/sqlx"
+  packages = [".","reflectx"]
+  revision = "d9bd385d68c068f1fabb5057e3dedcbcbb039d0f"
 
 [[projects]]
   branch = "master"

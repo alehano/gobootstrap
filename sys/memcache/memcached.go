@@ -21,7 +21,7 @@ const (
 )
 
 var (
-	// Inited memcached Client
+	// Initialized Memcached Client
 	mc = memcache.New(config.Get().MemcachedAddr...)
 
 	compressMethods = map[uint32]string{
