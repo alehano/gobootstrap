@@ -6,11 +6,10 @@ import (
 )
 
 type ExampleModel struct {
-	Id      int
-	Title   string `valid:"required"`
-
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        int `db:"id"`
+	Title     string `db:"title" valid:"required"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 func (t *ExampleModel) Validate() error {

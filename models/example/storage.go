@@ -1,8 +1,6 @@
 package example
 
-/*
-All methods to save data to DB
- */
+// Methods to save data to a DB
 type ExampleStorage interface {
 	DBInit() error
 	Create(item ExampleModel) (int, error)
