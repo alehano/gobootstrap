@@ -1,4 +1,4 @@
-memo = "a34712c820aa7bf7406be84ab4f1633bfb92127448960933eeed27a8b28b3b13"
+memo = "4408e34fc8ad4e1a8e0f9190ccc698389e8e1548a952b9e2906e088111cb5da1"
 
 [[projects]]
   branch = "master"
@@ -31,6 +31,12 @@ memo = "a34712c820aa7bf7406be84ab4f1633bfb92127448960933eeed27a8b28b3b13"
   revision = "d9eb7a3d35ec988b8585d4a0068e462c27d28380"
 
 [[projects]]
+  name = "github.com/inconshreveable/mousetrap"
+  packages = ["."]
+  revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
+  version = "v1.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/jmoiron/sqlx"
   packages = [".","reflectx"]
@@ -41,6 +47,24 @@ memo = "a34712c820aa7bf7406be84ab4f1633bfb92127448960933eeed27a8b28b3b13"
   name = "github.com/lib/pq"
   packages = [".","oid"]
   revision = "ae7391529ced9c12f06bf01eae33dadb4c70e49f"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/spf13/cobra"
+  packages = ["."]
+  revision = "d7ba19510d17ff09130f842c8c2eb48f4196b6ee"
+
+[[projects]]
+  name = "github.com/spf13/pflag"
+  packages = ["."]
+  revision = "e57e3eeb33f795204c1ca35f56c44f83227c6e66"
+  version = "v1.0.0"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/crypto"
+  packages = ["bcrypt","blowfish"]
+  revision = "558b6879de74bc843225cde5686419267ff707ca"
 
 [[projects]]
   branch = "master"

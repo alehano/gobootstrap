@@ -18,9 +18,10 @@ import (
 
 func main() {
 	cmd.RootCmd.AddCommand(&cobra.Command{
-		Use:   "run",
+		Use:   "run_server",
 		Short: "Start Application Web Server",
 		Run: func(cmd *cobra.Command, args []string) {
+			log.Printf("Server running on :%d\n", config.Get().Port)
 			runServer()
 		},
 	})
