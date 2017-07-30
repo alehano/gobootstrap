@@ -2,22 +2,39 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"log"
 	"net/http"
-	"github.com/alehano/gobootstrap/sys/cli"
+	"github.com/alehano/gobootstrap/sys/cmd"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/alehano/gobootstrap/config"
-	"github.com/alehano/gobootstrap/views/home"
+	"github.com/spf13/cobra"
+	"github.com/alehano/gobootstrap/sys/urls"
+	_ "github.com/alehano/gobootstrap/models"
+	// Add all views to enable them
+	_ "github.com/alehano/gobootstrap/views/home"
 )
 
 func main() {
-	cli.CheckAndRun()
+	cmd.RootCmd.AddCommand(&cobra.Command{
+		Use:   "run",
+		Short: "Start Application Web Server",
+		Run: func(cmd *cobra.Command, args []string) {
+			runServer()
+		},
+	})
+
+	if err := cmd.RootCmd.Execute(); err != nil {
+		log.Println(err)
+		os.Exit(1)
+	}
+}
+
+func runServer() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
-
-	// Add URLs
-	r.Group(home.URLs)
-
+	urls.AddAll(r)
 	http.ListenAndServe(fmt.Sprintf(":%d", config.Get().Port), r)
 }

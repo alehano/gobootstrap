@@ -6,6 +6,6 @@ import "github.com/alehano/gobootstrap/sys/db"
 var Man Manager = NewExampleMan(NewPostgresStorage())
 
 func init() {
-	db.RegisterDBInitter(Man.storage)
+	db.RegisterInitter(Man.storage)
 }
 

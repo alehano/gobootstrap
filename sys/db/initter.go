@@ -10,7 +10,7 @@ type DBInitter interface {
 }
 
 // Register DBInitter to init by command
-func RegisterDBInitter(dbi DBInitter) {
+func RegisterInitter(dbi DBInitter) {
 	dbInitStore = append(dbInitStore, dbi)
 }
 
