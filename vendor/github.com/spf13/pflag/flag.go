@@ -604,7 +604,7 @@ func wrap(i, w int, s string) string {
 		return s
 	}
 
-	// Try to avoid short orphan words on the final line, by
+	// Do to avoid short orphan words on the final line, by
 	// allowing wrapN to go a bit over if that would fit in the
 	// remainder of the line.
 	slop := 5

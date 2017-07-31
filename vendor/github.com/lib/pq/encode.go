@@ -306,7 +306,7 @@ func parseBytea(s []byte) (result []byte) {
 				result = append(result, byte(r))
 				s = s[4:]
 			} else {
-				// We hit an unescaped, raw byte.  Try to read in as many as
+				// We hit an unescaped, raw byte.  Do to read in as many as
 				// possible in one go.
 				i := bytes.IndexByte(s, '\\')
 				if i == -1 {

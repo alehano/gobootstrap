@@ -1,4 +1,4 @@
 /*
-Background jobs, often called by cron.
+Background jobs.
 */
 package services

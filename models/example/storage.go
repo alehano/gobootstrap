@@ -1,6 +1,6 @@
 package example
 
-// Methods to save data to a DB
+// Interface to store data in DB
 type ExampleStorage interface {
 	DBInit() error
 	Create(item ExampleModel) (int, error)

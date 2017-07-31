@@ -3,11 +3,17 @@ package postgres
 import (
 	_ "github.com/lib/pq"
 	"github.com/jmoiron/sqlx"
-	sysdb "github.com/alehano/gobootstrap/sys/db"
+	"github.com/alehano/gobootstrap/utils/pause"
 	"github.com/alehano/gobootstrap/config"
 	"sync"
 	"log"
 	"fmt"
+	"time"
+)
+
+const (
+	maxReconnect      = 10
+	reconnectInterval = 5 * time.Second
 )
 
 var dbInstance = struct {
@@ -18,19 +24,23 @@ var dbInstance = struct {
 	db: nil,
 }
 
-func GetDB(tries ...int) *sqlx.DB {
+func GetDB() *sqlx.DB {
 	dbInstance.mu.Lock()
 	defer dbInstance.mu.Unlock()
 	if dbInstance.db == nil {
-		db, err := sqlx.Connect("postgres",
-			fmt.Sprintf("host=%s password=%s user=%s dbname=%s sslmode=%s",
-				config.Get().PostgresHost, config.Get().PostgresPassword,
-				config.Get().PostgresUser, config.Get().PostgresDatabase, config.Get().PostgresSSLMode))
-		if err != nil {
-			log.Printf("Postgres connection error: %s", err)
-			return GetDB(sysdb.ReconnectCounter(tries...))
+		for pause.New(maxReconnect, reconnectInterval).Do() {
+			db, err := sqlx.Connect("postgres",
+				fmt.Sprintf("host=%s password=%s user=%s dbname=%s sslmode=%s",
+					config.Get().PostgresHost, config.Get().PostgresPassword,
+					config.Get().PostgresUser, config.Get().PostgresDatabase, config.Get().PostgresSSLMode))
+			if err != nil {
+				log.Printf("Postgres connection error: %s", err)
+			} else {
+				dbInstance.db = db
+				return dbInstance.db
+			}
 		}
-		dbInstance.db = db
+		return &sqlx.DB{}
 	}
 	return dbInstance.db
 }

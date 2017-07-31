@@ -12,9 +12,10 @@ import (
 )
 
 var (
-	defaultFilename  = "config.yml"
-	c               *cfg
-	mu              sync.Mutex
+	Filename = "config.yml"
+	ENVName  = "APP_CONFIG"
+	c        *cfg
+	mu       sync.Mutex
 )
 
 func Get() *cfg {
@@ -24,9 +25,9 @@ func Get() *cfg {
 		if c != nil {
 			return c
 		}
-		// Try to load form ENV
+		// Do to load form ENV
 		var filename string
-		if envFilename := os.Getenv("APP_CONFIG"); envFilename != "" {
+		if envFilename := os.Getenv(ENVName); envFilename != "" {
 			filename = envFilename
 		} else {
 			// Default
@@ -34,7 +35,7 @@ func Get() *cfg {
 			if err != nil {
 				log.Fatalf("Can't get config path. Error: %s", err)
 			}
-			filename = fmt.Sprintf("%s/%s", curDir, defaultFilename)
+			filename = fmt.Sprintf("%s/%s", curDir, Filename)
 		}
 		if filename == "" {
 			log.Fatal("Config filename is empty")
@@ -71,18 +72,18 @@ func Reset() {
 }
 
 func CreateDefaultConfigFile() error {
-	if exists(defaultFilename) {
+	if exists(Filename) {
 		return errors.New("Config file already exists")
 	}
 	data, err := yaml.Marshal(Defaults())
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(defaultFilename, data, 0666)
+	err = ioutil.WriteFile(Filename, data, 0666)
 	if err != nil {
 		return err
 	}
-	log.Printf("Config file created: %s", defaultFilename)
+	log.Printf("Config file created: %s", Filename)
 	return nil
 }
 

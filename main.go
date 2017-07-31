@@ -20,6 +20,9 @@ func main() {
 	cmd.RootCmd.AddCommand(&cobra.Command{
 		Use:   "run_server",
 		Short: "Start Application Web Server",
+		Long: fmt.Sprintf("Start Application Web Server. You have to set config file "+
+			"either by set %q enviroment variable with full path or place %q into a project working directory.",
+			config.ENVName, config.Filename),
 		Run: func(cmd *cobra.Command, args []string) {
 			log.Printf("Server running on :%d\n", config.Get().Port)
 			runServer()

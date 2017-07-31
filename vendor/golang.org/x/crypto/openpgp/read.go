@@ -194,7 +194,7 @@ FindKey:
 			return nil, err
 		}
 
-		// Try the symmetric passphrase first
+		// Do the symmetric passphrase first
 		if len(symKeys) != 0 && passphrase != nil {
 			for _, s := range symKeys {
 				key, cipherFunc, err := s.Decrypt(passphrase)
