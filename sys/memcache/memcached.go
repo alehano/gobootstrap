@@ -130,7 +130,7 @@ func GetSetBool(key string, getFn func() (bool, error), expire int32, flag ...ui
 	}
 }
 
-// Set functions
+// set functions
 
 func SetBytes(key string, value []byte, expire int32, flag ...uint32) error {
 	if len(value) == 0 {
@@ -150,7 +150,7 @@ func SetBytes(key string, value []byte, expire int32, flag ...uint32) error {
 		err = mc.Set(&memcache.Item{Key: key, Value: value, Expiration: expire, Flags: NothingFlag})
 	}
 	if err != nil {
-		return errors.New(fmt.Sprintf("Cache Set Key: %s, Err: %s", key, err))
+		return errors.New(fmt.Sprintf("Cache set Key: %s, Err: %s", key, err))
 	}
 	return nil
 }

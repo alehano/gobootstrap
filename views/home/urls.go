@@ -11,20 +11,5 @@ func init() {
 }
 
 func urlGroup(r chi.Router) {
-	r.Get("/", home)
-
-	//r.Route("/articles", func(r chi.Router) {
-	//	r.Get("/", listArticles)
-	//	r.Route("/{articleID}", func(r chi.Router) {
-	//		r.Get("/", getArticle)
-	//	})
-	//})
-
-	r.Route("/articles", func(r chi.Router) {
-		r.Get(reverse.AddGr("list_articles", "/articles", "/"), listArticles)
-		r.Route("/{articleID}", func(r chi.Router) {
-			r.Get(reverse.AddGr("get_article", "/articles{articleID}", "/", "{articleID}"), getArticle)
-		})
-	})
-
+	r.Get(reverse.Add("home", "/"), home)
 }

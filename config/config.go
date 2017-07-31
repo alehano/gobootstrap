@@ -1,8 +1,8 @@
 /*
-Config contains different parameters as well as some lists of names used in other App parts,
-like cache keys, CLI commands or PubSub messages.
-Config file can be load by set environment variable "APP_CONFIG" with
-full path to .yml config file. Or by putting config.yml to the app root directory.
+Config package contains different typed parameters accessible by .Get(),
+as well as some structures like cache keys generator.
+Config file can be load by either set environment variable "APP_CONFIG" with
+full path to .yml config file or by putting config.yml to the app working directory.
 
 Usage:
     `config.Get().SomeParam`
@@ -28,7 +28,7 @@ type cfg struct {
 	// ... add more
 }
 
-func GetDefault() cfg {
+func Defaults() cfg {
 	return cfg{
 		Debug: false,
 		Port:  8000,

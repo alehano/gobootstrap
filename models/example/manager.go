@@ -42,9 +42,19 @@ func (m Manager) GetCached(id int) (ExampleModel, error) {
 }
 
 func (m Manager) Update(item ExampleModel) error {
-	return m.storage.Update(item)
+	err := m.storage.Update(item)
+	if err != nil {
+		return err
+	}
+	pubsub.Publish(config.ExampleUpdateMsg, item.ID)
+	return nil
 }
 
 func (m Manager) Delete(id int) error {
-	return m.storage.Delete(id)
+	err := m.storage.Delete(id)
+	if err != nil {
+		return err
+	}
+	pubsub.Publish(config.ExampleDeleteMsg, id)
+	return nil
 }

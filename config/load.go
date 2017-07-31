@@ -12,14 +12,18 @@ import (
 )
 
 var (
-	defaultFilename = "config.yml"
-	current         cfg
-	loaded          bool
+	defaultFilename  = "config.yml"
+	c               *cfg
 	mu              sync.Mutex
 )
 
 func Get() *cfg {
-	if !loaded {
+	if c == nil {
+		mu.Lock()
+		defer mu.Unlock()
+		if c != nil {
+			return c
+		}
 		// Try to load form ENV
 		var filename string
 		if envFilename := os.Getenv("APP_CONFIG"); envFilename != "" {
@@ -36,29 +40,16 @@ func Get() *cfg {
 			log.Fatal("Config filename is empty")
 		}
 
-		err := Load(filename)
+		err := load(filename)
 		if err != nil {
 			log.Fatalf("Config file didn't load. Error: %s", err)
 		}
 
 	}
-	return &current
+	return c
 }
 
-func Set(conf cfg) {
-	mu.Lock()
-	defer mu.Unlock()
-	current = conf
-	loaded = true
-}
-
-func Reset(conf cfg) {
-	mu.Lock()
-	defer mu.Unlock()
-	loaded = false
-}
-
-func Load(filename string) error {
+func load(filename string) error {
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return err
@@ -68,15 +59,22 @@ func Load(filename string) error {
 	if err != nil {
 		return err
 	}
-	Set(conf)
+	c = &conf
 	return nil
+}
+
+// After Reset(), config will be reloaded
+func Reset() {
+	mu.Lock()
+	defer mu.Unlock()
+	c = nil
 }
 
 func CreateDefaultConfigFile() error {
 	if exists(defaultFilename) {
 		return errors.New("Config file already exists")
 	}
-	data, err := yaml.Marshal(GetDefault())
+	data, err := yaml.Marshal(Defaults())
 	if err != nil {
 		return err
 	}

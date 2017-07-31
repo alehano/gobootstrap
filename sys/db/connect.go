@@ -1,7 +1,6 @@
 package db
 
 import (
-	"log"
 	"time"
 )
 
@@ -17,7 +16,7 @@ func ReconnectCounter(tries ...int) int {
 	if len(tries) > 0 {
 		try = tries[0] + 1
 		if try > connMaxTries {
-			log.Fatalf("Max DB reconnections failed")
+			panic("Max DB connections failed")
 		}
 	}
 	time.Sleep(time.Duration(try) * connTimeToReconnect)

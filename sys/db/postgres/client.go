@@ -10,12 +10,10 @@ import (
 	"fmt"
 )
 
-type dbStruct struct {
+var dbInstance = struct {
 	mu sync.Mutex
 	db *sqlx.DB
-}
-
-var dbInstance = dbStruct{
+}{
 	mu: sync.Mutex{},
 	db: nil,
 }
