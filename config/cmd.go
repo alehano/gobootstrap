@@ -36,21 +36,4 @@ func init() {
 		},
 	})
 
-
-	cmd.RootCmd.AddCommand(&cobra.Command{
-		Use:   "init_config",
-		Short: "Init default config file",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return CreateDefaultConfigFile()
-		},
-	})
-
-	//cli.RegisterCLI(ConfigInitCLI,
-	//	fmt.Sprintf("Create default config file (%s)", defaultFilename), CreateDefaultConfigFile)
-	//
-	//cli.RegisterCLIWithArgs(GenAdminPwd, "[string] Generate Admin password", func(args ...string) error {
-	//	fmt.Sprintf("Args: %v", args)
-	//	return nil
-	//})
-
 }

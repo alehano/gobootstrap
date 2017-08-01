@@ -16,6 +16,8 @@ type cfg struct {
 	Debug             bool
 	Port              int
 	ProjectPath       string `yaml:"project_path"`
+	WebsiteDomain     string `yaml:"website_domain"`
+	WebsiteProtocol   string `yaml:"website_protocol"`
 	AdminLogin        string `yaml:"admin_login"`
 	AdminPasswordHash string `yaml:"admin_password_hash"`
 	MemcachedAddr     []string `yaml:"memcached_addr"`
@@ -26,13 +28,4 @@ type cfg struct {
 	PostgresSSLMode   string `yaml:"postgres_ssl_mode"` // e.g. "disable"
 
 	// ... add more
-}
-
-func Defaults() cfg {
-	return cfg{
-		Debug: false,
-		Port:  8000,
-
-		// ... add more
-	}
 }

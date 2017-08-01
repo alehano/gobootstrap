@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"log"
 	"fmt"
-	"errors"
 )
 
 var (
@@ -32,16 +31,12 @@ func Get() *cfg {
 			filename = envFilename
 		} else {
 			// Default
-			root, err := filepath.Abs(filepath.Dir(os.Args[0]))
+			curDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 			if err != nil {
 				log.Fatalf("Can't get config path. Error: %s", err)
 			}
-			filename = fmt.Sprintf("%s/%s", root, Filename)
+			filename = fmt.Sprintf("%s/%s", curDir, Filename)
 		}
-		if filename == "" {
-			log.Fatal("Config filename is empty")
-		}
-
 		err := load(filename)
 		if err != nil {
 			log.Fatalf("Config file didn't load. Error: %s", err)
@@ -70,29 +65,4 @@ func Reset() {
 	mu.Lock()
 	defer mu.Unlock()
 	c = nil
-}
-
-func CreateDefaultConfigFile() error {
-	if exists(Filename) {
-		return errors.New("Config file already exists")
-	}
-	data, err := yaml.Marshal(Defaults())
-	if err != nil {
-		return err
-	}
-	err = ioutil.WriteFile(Filename, data, 0666)
-	if err != nil {
-		return err
-	}
-	log.Printf("Config file created: %s", Filename)
-	return nil
-}
-
-func exists(name string) bool {
-	if _, err := os.Stat(name); err != nil {
-		if os.IsNotExist(err) {
-			return false
-		}
-	}
-	return true
 }
