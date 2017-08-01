@@ -32,11 +32,11 @@ func Get() *cfg {
 			filename = envFilename
 		} else {
 			// Default
-			curDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+			root, err := filepath.Abs(filepath.Dir(os.Args[0]))
 			if err != nil {
 				log.Fatalf("Can't get config path. Error: %s", err)
 			}
-			filename = fmt.Sprintf("%s/%s", curDir, Filename)
+			filename = fmt.Sprintf("%s/%s", root, Filename)
 		}
 		if filename == "" {
 			log.Fatal("Config filename is empty")

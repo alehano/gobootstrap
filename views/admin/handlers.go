@@ -3,6 +3,7 @@ package admin
 import (
 	"net/http"
 	"github.com/alehano/reverse"
+	"github.com/alehano/gobootstrap/sys/tmpl"
 )
 
 func index(w http.ResponseWriter, r *http.Request) {
@@ -10,7 +11,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Admin Login"))
+	tmpl.Render(w, "admin.login", tmpl.D{"test": "OK"})
 }
 
 func loginPost(w http.ResponseWriter, r *http.Request) {

@@ -4,6 +4,7 @@ import (
 	"github.com/alehano/gobootstrap/sys/urls"
 	"github.com/alehano/reverse"
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 )
 
 func init() {
@@ -17,7 +18,7 @@ func urlGroup(r chi.Router) {
 
 		r.Route(reverse.AddGr("admin.login", "/admin", "/login"), func(r chi.Router) {
 			r.Get("/", login)
-			r.Post("/", loginPost)
+			r.With(middleware.Throttle(1)).Post("/", loginPost)
 		})
 	})
 }

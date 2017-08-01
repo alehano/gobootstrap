@@ -1,9 +1,8 @@
 # Go Bootstrap
 
-# WARNING: It's under development
+# WARNING: It's under highly development
 
-Web framework in Go focused on flexibility and scalability 
-due to splitting by many lose coupled packages. 
+Web framework in Go focused on simplicity and flexibility. 
 
 **Main features:**
 
@@ -11,22 +10,23 @@ due to splitting by many lose coupled packages.
 * Lose coupled modules
 * Pluggable DB layer
 * Memcache support
-* CLI commands support
+* CLI commands support (Cobra)
 * URL reverse
 * Type safe config
 
 After cloning repo you have to rename any `github.com/alehano/gobootstrap` to 
 `{your project path}`
+Feel free to modify source code as you want.
+
+## Project Structure:
 
 Project has a nested structure. Top level parts can use by many lower level parts.
 
 For example, top level `/helpers` package should contain more common helpers 
 than more specific lower level `/views/contacts/helpers.go`.
 Also, files under `common` dir considered as a upper level. For example,
-`/views/common/static` dir should contain files, used in multiple views, but
-`/views/admin/static` should contain files used only in `/admin` section.
-
-## Project Structure:
+`/views/common/tpl` dir should contain files, used in multiple views, but
+`/views/admin/tpl` should contain files used only in `/admin` section.
 
 #### actions
 Complex tasks usually involving multiple models interactions.    
