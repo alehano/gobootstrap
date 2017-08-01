@@ -13,6 +13,8 @@ import (
 	"github.com/alehano/gobootstrap/sys/urls"
 	_ "github.com/alehano/gobootstrap/models"
 	// Add all views to enable them
+	_ "github.com/alehano/gobootstrap/views/common"
+	_ "github.com/alehano/gobootstrap/views/admin"
 	_ "github.com/alehano/gobootstrap/views/home"
 )
 
@@ -39,6 +41,7 @@ func runServer() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	r.Use(middleware.RedirectSlashes)
 	urls.AddAll(r)
 	http.ListenAndServe(fmt.Sprintf(":%d", config.Get().Port), r)
 }

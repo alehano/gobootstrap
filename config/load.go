@@ -22,6 +22,7 @@ func Get() *cfg {
 	if c == nil {
 		mu.Lock()
 		defer mu.Unlock()
+		// Double check after mutex unlocking if config not set
 		if c != nil {
 			return c
 		}
