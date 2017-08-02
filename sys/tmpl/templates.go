@@ -5,15 +5,6 @@ Root template must have name "base".
 Context value available by "context" name.
 To get value use: {{.context.Value "key"}}
 
-Example:
-
-BaseTmpl := tmpl.NewSet("views/common/tmpl/",
-	"base.tmpl", "inc/header.tmpl", inc/footer.tmpl")
-
-BaseTmpl.AddFuncMap(...)
-
-tmpl.Register("home", BaseTmpl.With("views/home/tmpl/", "home.tmpl"))
-
  */
 package tmpl
 
@@ -34,34 +25,61 @@ var (
 	storeSets = map[string]Set{}
 )
 
-func NewSet(pathPrefix string, names ...string) Set {
+func NewSet() Set {
 	s := Set{}
 	s.AddFuncMap(defaultFilters)
-	for _, name := range names {
-		s.fileNames = append(s.fileNames, pathPrefix+name)
-	}
 	return s
 }
 
 // A set of template files with a list of FuncMap
 type Set struct {
-	fileNames []string
+	prefix    string
+	filenames []string
 	funcMaps  []template.FuncMap
 }
 
-// AddFuncMap register template FuncMap for the Set
-func (s *Set) AddFuncMap(fm template.FuncMap) {
-	s.funcMaps = append(s.funcMaps, fm)
+// AddFuncMap adds template FuncMap for the Set
+func (s Set) AddFuncMap(fm template.FuncMap) Set {
+	ns := s.copy()
+	ns.funcMaps = append(ns.funcMaps, fm)
+	return ns
 }
 
-// With creates new Set based on parent and adds new template files
-func (s *Set) With(pathPrefix string, names ...string) Set {
-	newSet := Set{}
-	newSet.fileNames = append(newSet.fileNames, s.fileNames...)
+// Set template filenames prefix
+func (s Set) SetPrefix(pathPrefix string) Set {
+	ns := s.copy()
+	ns.prefix = pathPrefix
+	return ns
+}
+
+// Adds files with set prefix
+func (s Set) Add(filename ...string) Set {
+	ns := s.copy()
+	for _, fn := range filename {
+		ns.filenames = append(ns.filenames, ns.prefix+fn)
+	}
+	return ns
+}
+
+// Adds files with given prefix, ignoring set by default
+func (s Set) AddWithPrefix(prefix string, filename ...string) Set {
+	ns := s.copy()
+	for _, fn := range filename {
+		ns.filenames = append(ns.filenames, prefix+fn)
+	}
+	return ns
+}
+
+// Adds files without any prefix
+func (s Set) AddNoPrefix(filename ...string) Set {
+	return s.AddWithPrefix("", filename...)
+}
+
+// Copy creates new Set
+func (s Set) copy() Set {
+	newSet := Set{prefix:s.prefix}
+	newSet.filenames = append(newSet.filenames, s.filenames...)
 	newSet.funcMaps = append(newSet.funcMaps, s.funcMaps...)
-	secondSet := NewSet(pathPrefix, names...)
-	newSet.fileNames = append(newSet.fileNames, secondSet.fileNames...)
-	newSet.funcMaps = append(newSet.funcMaps, secondSet.funcMaps...)
 	return newSet
 }
 
@@ -91,7 +109,7 @@ func Register(name string, set Set) {
 
 func compileTmpl(name string, set Set) {
 	var absFileNames []string
-	for _, fn := range set.fileNames {
+	for _, fn := range set.filenames {
 		absFileNames = append(absFileNames, fmt.Sprintf("%s/%s", config.Get().ProjectPath, fn))
 	}
 	mu.Lock()
