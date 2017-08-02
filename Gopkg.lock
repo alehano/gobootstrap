@@ -1,10 +1,16 @@
-memo = "4408e34fc8ad4e1a8e0f9190ccc698389e8e1548a952b9e2906e088111cb5da1"
+memo = "145746b3a1322659a913267e211d05c49244f9069f9f79b372e1bdb8d8be65a3"
 
 [[projects]]
   branch = "master"
   name = "github.com/alehano/gohelpers"
   packages = ["compress"]
   revision = "eb98525b0837008f8cf0678bd417afa35d3ec5a0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/alehano/reverse"
+  packages = ["."]
+  revision = "3fcb5f6be87e83d4780e7ca0733bd0ca8c0ff539"
 
 [[projects]]
   branch = "master"
