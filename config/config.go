@@ -20,6 +20,7 @@ type cfg struct {
 	WebsiteProtocol   string `yaml:"website_protocol"`
 	AdminLogin        string `yaml:"admin_login"`
 	AdminPasswordHash string `yaml:"admin_password_hash"`
+	JWTSecret         string `yaml:"jwt_secret"`
 	MemcachedAddr     []string `yaml:"memcached_addr"`
 	PostgresHost      string `yaml:"postgres_host"`
 	PostgresDatabase  string `yaml:"postgres_database"`

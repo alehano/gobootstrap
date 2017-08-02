@@ -12,20 +12,11 @@ Web framework in Go focused on simplicity and flexibility.
 * Memcache support
 * CLI commands support
 * URL reverse
+* JWT Auth support
 * Type safe config
 
 After cloning repo you have to rename any `github.com/alehano/gobootstrap` to 
 `{your project path}`. Feel free to modify source code as you want.
-
-#### Some of used external packages:
-
-* [Chi](https://github.com/go-chi/chi)
-* [Cobra](https://github.com/spf13/cobra)
-* [reverse](https://github.com/alehano/reverse)
-* [gohelpers](https://github.com/alehano/gohelpers)
-* [govalidator](https://github.com/asaskevich/govalidator)
-* [gomemcache](https://github.com/bradfitz/gomemcache)
-* [sqlx](https://github.com/jmoiron/sqlx)
 
 ## Project Structure:
 
@@ -68,3 +59,14 @@ Utils more complex than helpers, but also independent from other parts of the Ap
 Representation layers split by modules. Contains web handlers, templates, 
 static files (img, js, css) and more. Handlers mostly use model Managers to
 get and save data. 
+
+#### Some of used external packages:
+
+* [Chi](https://github.com/go-chi/chi)
+* [Cobra](https://github.com/spf13/cobra)
+* [reverse](https://github.com/alehano/reverse)
+* [gohelpers](https://github.com/alehano/gohelpers)
+* [govalidator](https://github.com/asaskevich/govalidator)
+* [gomemcache](https://github.com/bradfitz/gomemcache)
+* [sqlx](https://github.com/jmoiron/sqlx)
+* [jwt-go](https://github.com/dgrijalva/jwt-go)

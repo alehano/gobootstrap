@@ -33,29 +33,29 @@ func (s postgresStorage) DBInit() error {
 	    updated_at TIMESTAMP,
 	    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	);`, s.table)
-	return models.WrapPostgresErr(errors.New("TODO"))
+	return models.WrapSqlErr(errors.New("TODO"))
 }
 
 func (s postgresStorage) Create(item ExampleModel) (int, error) {
 	res, err := s.db.Exec("INSERT INTO $1 (title, updated_at) VALUES ($2, NOW())",
 		s.table, item.Title)
 	if err != nil {
-		return 0, models.WrapPostgresErr(err)
+		return 0, models.WrapSqlErr(err)
 	}
 	newId, err := res.LastInsertId()
-	return int(newId), models.WrapPostgresErr(err)
+	return int(newId), models.WrapSqlErr(err)
 }
 
 func (s postgresStorage) Get(id int) (ExampleModel, error) {
 	res := ExampleModel{}
 	err := s.db.Get(&res, "SELECT * FROM $1 WHERE id=$2", s.table, id)
-	return res, models.WrapPostgresErr(err)
+	return res, models.WrapSqlErr(err)
 }
 
 func (s postgresStorage) Update(item ExampleModel) error {
-	return models.WrapPostgresErr(errors.New("TODO"))
+	return models.WrapSqlErr(errors.New("TODO"))
 }
 
 func (s postgresStorage) Delete(id int) error {
-	return models.WrapPostgresErr(errors.New("TODO"))
+	return models.WrapSqlErr(errors.New("TODO"))
 }

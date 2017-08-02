@@ -13,5 +13,8 @@ func init() {
 
 
 func urlGroup(r chi.Router) {
-	r.Get("/robots.txt", RenderTmpl("common.robots_txt"))
+
+	r.NotFound(notFound)
+
+	urls.GetAndHead(r, "/robots.txt", RenderTmpl("common.robots_txt"))
 }

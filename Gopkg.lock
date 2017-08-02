@@ -1,4 +1,4 @@
-memo = "145746b3a1322659a913267e211d05c49244f9069f9f79b372e1bdb8d8be65a3"
+memo = "416786fb4ca3e522aa10b71b95c6af097fee5434fda9653551896250bf363486"
 
 [[projects]]
   branch = "master"
@@ -25,10 +25,22 @@ memo = "145746b3a1322659a913267e211d05c49244f9069f9f79b372e1bdb8d8be65a3"
   revision = "1952afaa557dc08e8e0d89eafab110fb501c1a2b"
 
 [[projects]]
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  revision = "d2709f9f1f31ebcda9651b03077758c1f3a0018c"
+  version = "v3.0.0"
+
+[[projects]]
   name = "github.com/go-chi/chi"
   packages = [".","middleware"]
   revision = "b8567b6442e27704bfeb725095091581cbe82a00"
   version = "v3.1.4"
+
+[[projects]]
+  name = "github.com/go-chi/jwtauth"
+  packages = ["."]
+  revision = "e701090bf80b87b3f81b27edf0559ab044b11181"
+  version = "v3.0.2"
 
 [[projects]]
   branch = "master"

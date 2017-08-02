@@ -2,6 +2,11 @@
 
 {{define "content"}}
 
-<p>Admin Login</p>
+<h1>Admin Login</h1>
+<form action="{{reverse "admin.login"}}" method="post">
+    <input name="login" type="text">
+    <input name="password" type="password">
+    <button type="submit">OK</button>
+</form>
 
 {{end}}
