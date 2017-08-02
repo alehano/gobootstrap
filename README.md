@@ -15,18 +15,17 @@ Web framework in Go focused on simplicity and flexibility.
 * Type safe config
 
 After cloning repo you have to rename any `github.com/alehano/gobootstrap` to 
-`{your project path}`
-Feel free to modify source code as you want.
+`{your project path}`. Feel free to modify source code as you want.
 
 ## Project Structure:
 
-Project has a nested structure. Top level parts can use by many lower level parts.
+Project has a nested structure. Top level parts can be used by many lower level parts.
 
 For example, top level `/helpers` package should contain more common helpers 
 than more specific lower level `/views/contacts/helpers.go`.
-Also, files under `common` dir considered as a upper level. For example,
-`/views/common/tpl` dir should contain files, used in multiple views, but
-`/views/admin/tpl` should contain files used only in `/admin` section.
+Also, files under `common` dirs considered as upper level's. For example,
+`/views/common/tmpl` dir should contain files using by multiple views, but
+`/views/admin/tmpl` should contain files using only from `/admin` section.
 
 #### actions
 Complex tasks usually involving multiple models interactions.    
@@ -57,5 +56,5 @@ Utils more complex than helpers, but also independent from other parts of the Ap
 
 #### views
 Representation layers split by modules. Contains web handlers, templates, 
-static files (img, js, css) and more. Handlers mostly use models Managers to
+static files (img, js, css) and more. Handlers mostly use model Managers to
 get and save data. 
