@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"github.com/alehano/reverse"
 	"github.com/alehano/gobootstrap/sys/tmpl"
+	"context"
 )
 
 func index(w http.ResponseWriter, r *http.Request) {
@@ -11,7 +12,8 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
-	tmpl.Render(w, "admin.login", tmpl.D{"test": "OK"})
+	r = r.WithContext(context.WithValue(r.Context(), "ctx", "ctxOK"))
+	tmpl.Render(w, r, "admin.login", tmpl.D{"test": "OK"})
 }
 
 func loginPost(w http.ResponseWriter, r *http.Request) {

@@ -2,7 +2,7 @@
 Templates store and rendering.
 Root template must have name "base".
 
-Context passes by "context" name.
+Context value available by "context" name.
 To get value use: {{.context.Value "key"}}
 
 Example:
@@ -22,7 +22,6 @@ import (
 	"sync"
 	"fmt"
 	"github.com/alehano/gobootstrap/config"
-	"context"
 	"net/http"
 )
 
@@ -67,6 +66,9 @@ func (s *Set) With(pathPrefix string, names ...string) Set {
 }
 
 func (s Set) getFuncMapCombined() template.FuncMap {
+	if len(s.funcMaps) == 1 {
+		return s.funcMaps[0]
+	}
 	combFm := template.FuncMap{}
 	for _, fm := range s.funcMaps {
 		for key, fn := range fm {
@@ -94,19 +96,15 @@ func compileTmpl(name string, set Set) {
 	}
 	mu.Lock()
 	defer mu.Unlock()
-	t := template.Must(template.New("").Funcs(set.getFuncMapCombined()).ParseFiles(absFileNames...))
+	t := template.Must(template.New(name).Funcs(set.getFuncMapCombined()).ParseFiles(absFileNames...))
 	store[name] = *t
 }
 
-func Render(w http.ResponseWriter, name string, data map[string]interface{}) {
-	renderTmpl(w, nil, name, data)
+func Render(w http.ResponseWriter, r *http.Request, name string, data ...map[string]interface{}) {
+	renderTmpl(w, r, name, data...)
 }
 
-func RenderCtx(w http.ResponseWriter, c context.Context, name string, data map[string]interface{}) {
-	renderTmpl(w, c, name, data)
-}
-
-func renderTmpl(w http.ResponseWriter, c context.Context, name string, data map[string]interface{}) {
+func renderTmpl(w http.ResponseWriter, r *http.Request, name string, data ...map[string]interface{}) {
 	// Recompile in debug mode
 	if config.Get().Debug {
 		compileTmpl(name, storeSets[name])
@@ -115,16 +113,14 @@ func renderTmpl(w http.ResponseWriter, c context.Context, name string, data map[
 	if !ok {
 		http.Error(w, fmt.Sprintf("Template %q does not exists", name), http.StatusInternalServerError)
 	}
-	tmplData := map[string]interface{}{}
-	if c != nil {
-		tmplData["context"] = c
-	}
-	if data != nil && len(data) > 0 {
-		for k := range data {
-			tmplData[k] = data[k]
+	newData := map[string]interface{}{}
+	newData["context"] = r.Context()
+	if len(data) > 0 && data[0] != nil {
+		for k, v := range data[0] {
+			newData[k] = v
 		}
 	}
-	err := t.ExecuteTemplate(w, "base", tmplData)
+	err := t.ExecuteTemplate(w, "base", newData)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

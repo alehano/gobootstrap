@@ -13,5 +13,5 @@ func init() {
 
 
 func urlGroup(r chi.Router) {
-	r.Get("/robots.txt", robotsTxt)
+	r.Get("/robots.txt", RenderTmpl("common.robots_txt"))
 }
