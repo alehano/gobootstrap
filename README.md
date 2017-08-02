@@ -4,18 +4,28 @@
 
 Web framework in Go focused on simplicity and flexibility. 
 
-**Main features:**
+#### Main features:
 
 * Nested structure
 * Lose coupled modules
 * Pluggable DB layer
 * Memcache support
-* CLI commands support (Cobra)
+* CLI commands support
 * URL reverse
 * Type safe config
 
 After cloning repo you have to rename any `github.com/alehano/gobootstrap` to 
 `{your project path}`. Feel free to modify source code as you want.
+
+#### Some of used external packages:
+
+* [Chi](https://github.com/go-chi/chi)
+* [Cobra](https://github.com/spf13/cobra)
+* [reverse](https://github.com/alehano/reverse)
+* [gohelpers](https://github.com/alehano/gohelpers)
+* [govalidator](https://github.com/asaskevich/govalidator)
+* [gomemcache](https://github.com/bradfitz/gomemcache)
+* [sqlx](https://github.com/jmoiron/sqlx)
 
 ## Project Structure:
 
