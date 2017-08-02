@@ -45,6 +45,12 @@ func (s Set) AddFuncMap(fm template.FuncMap) Set {
 	return ns
 }
 
+func (s Set) AddFunc(name string, fn interface{}) Set {
+	fm := template.FuncMap{}
+	fm[name]=fn
+	return s.AddFuncMap(fm)
+}
+
 // Set template filenames prefix
 func (s Set) SetPrefix(pathPrefix string) Set {
 	ns := s.copy()

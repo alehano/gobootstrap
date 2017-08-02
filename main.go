@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/alehano/gobootstrap/sys/urls"
 	_ "github.com/alehano/gobootstrap/models"
-	// Add all views to enable them
+	// Import all views to enable them
 	_ "github.com/alehano/gobootstrap/views/common"
 	_ "github.com/alehano/gobootstrap/views/admin"
 	_ "github.com/alehano/gobootstrap/views/home"

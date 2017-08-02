@@ -1,9 +1,15 @@
 package admin
 
-import 	"github.com/alehano/gobootstrap/sys/tmpl"
+import (
+	"github.com/alehano/gobootstrap/sys/tmpl"
+	"github.com/alehano/gobootstrap/views/common"
+)
 
 var (
-	BaseTmpl = tmpl.NewSet().SetPrefix("views/admin/tmpl/").Add("base.tmpl")
+	BaseTmpl = tmpl.NewSet().
+		SetPrefix("views/admin/tmpl/").
+		Add("base.tmpl").
+		AddFuncMap(common.DefaultTmplFuncMap)
 )
 
 
