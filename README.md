@@ -60,7 +60,21 @@ Representation layers split by modules. Contains web handlers, templates,
 static files (img, js, css) and more. Handlers mostly use model Managers to
 get and save data. 
 
-#### Some of used external packages:
+
+## Example config file `config.yml`
+
+```yaml
+debug: true
+port: 8000
+project_path: "/Users/alehano/Development/go/src/github.com/alehano/gobootstrap"
+website_protocol: "https://"
+website_domain: "example.com"
+admin_login: "admin"
+admin_password_hash: "$2a$10$5gCLP.GlOVBVFLtrzhoxfO5wsT0eiH7IsjzupA7ukTyI/znLFotHu" # password is "admin"
+jwt_secret: "secret"
+```
+
+## Some of used external packages:
 
 * [Chi](https://github.com/go-chi/chi)
 * [Cobra](https://github.com/spf13/cobra)

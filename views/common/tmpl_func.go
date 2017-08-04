@@ -8,3 +8,4 @@ import (
 var DefaultTmplFuncMap = template.FuncMap{
 	"reverse": reverse.Rev,
 }
+

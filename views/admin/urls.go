@@ -25,6 +25,7 @@ func urlGroup(r chi.Router) {
 	r.Route(reverse.Add("admin.index", "/admin"), func(r chi.Router) {
 		r.Use(jwtauth.Verifier(common.JwtTokenAuth))
 		r.Use(AdminAuthenticator)
+		r.Use(common.Session)
 		r.Get("/", index)
 	})
 }

@@ -4,7 +4,7 @@
 
 <h1>Admin Index</h1>
 
-Login: {{.admin_login}}<br>
-IsAdmin: {{.is_admin}}
+Session: {{.context.Value "session" }}<br>
+Session value: {{with .context.Value "session"}}{{ .admin_login }}{{end}}<br>
 
 {{end}}

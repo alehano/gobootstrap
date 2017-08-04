@@ -11,16 +11,7 @@ import (
 )
 
 func index(w http.ResponseWriter, r *http.Request) {
-	_, claims, err := jwtauth.FromContext(r.Context())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	tmpl.Render(w, r, "admin.index", tmpl.D{
-		"is_admin": claims["is_admin"],
-		"admin_login": claims["admin_login"],
-	})
+	tmpl.Render(w, r, "admin.index")
 }
 
 func login(w http.ResponseWriter, r *http.Request) {

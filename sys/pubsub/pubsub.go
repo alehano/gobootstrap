@@ -35,13 +35,3 @@ func Publish(topic string, msg interface{}, delay ...time.Duration) {
 		}
 	}
 }
-
-// Publish in a sync manner
-func PublishSync(topic string, msg interface{}) {
-	fns, ok := store[topic]
-	if ok {
-		for _, fn := range fns {
-			fn(msg)
-		}
-	}
-}

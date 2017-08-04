@@ -6,5 +6,6 @@ import (
 )
 
 var defaultFilters = template.FuncMap{
-	"now": time.Now,
+	"now":    time.Now,
 }
+
