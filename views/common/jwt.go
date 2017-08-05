@@ -5,4 +5,4 @@ import (
 	"github.com/alehano/gobootstrap/config"
 )
 
-var JwtTokenAuth = jwtauth.New("HS256", []byte(config.Get().AdminPasswordHash), nil)
+var JwtTokenAuth = jwtauth.New("HS256", []byte(config.Get().JWTSecret), nil)

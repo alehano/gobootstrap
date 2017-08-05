@@ -11,4 +11,9 @@ func (c cacheKeys) ExampleGet(id int) string {
 	return fmt.Sprintf("example.get.%d", id)
 }
 
+func (c cacheKeys) AuthThrottle(login string) string {
+	// TODO: hash murmur login
+	return fmt.Sprintf("auth.thr.%s", login)
+}
+
 // .. add more

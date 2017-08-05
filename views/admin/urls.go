@@ -19,7 +19,7 @@ func urlGroup(r chi.Router) {
 	r.Route(reverse.Add("admin.login", "/admin/login"), func(r chi.Router) {
 		r.Use(jwtauth.Verifier(common.JwtTokenAuth))
 		r.Get("/", login)
-		r.With(middleware.Throttle(1)).Post("/", loginPost)
+		r.With(middleware.Throttle(1), common.LoginThrottle).Post("/", loginPost)
 	})
 	r.Get(reverse.Add("admin.logout", "/admin/logout"), logout)
 	r.Route(reverse.Add("admin.index", "/admin"), func(r chi.Router) {
