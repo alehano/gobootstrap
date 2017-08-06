@@ -10,6 +10,7 @@ import (
 type D map[string]interface{} // Syntax sugar alias
 var store = map[string]*pongo2.Template{}
 var storePaths = map[string]string{}
+var defaultData = map[string]interface{}{}
 
 func Register(name, path string) {
 	if _, ok := store[name]; ok {
@@ -29,9 +30,25 @@ func RegisterMulti(baseDir string, names map[string]string) {
 	}
 }
 
+func RegisterDefaultData(data map[string]interface{}) {
+	for key, value := range data {
+		if _, exists := defaultData[key]; exists {
+			panic(fmt.Sprintf("Data key %q already exists", key))
+		} else {
+			defaultData[key] = value
+		}
+	}
+}
+
 func Render(w http.ResponseWriter, r *http.Request, name string, data map[string]interface{}) {
 	// Add Context
 	data["context"] = r.Context().Value
+	// Add default data
+	for key, value := range defaultData {
+		if _, dataExists := data[key]; !dataExists {
+			data[key] = value
+		}
+	}
 
 	var t *pongo2.Template
 	exists := false

@@ -15,6 +15,8 @@ func index(w http.ResponseWriter, r *http.Request) {
 ////
 
 func testPongo(w http.ResponseWriter, r *http.Request) {
-	r = r.WithContext(context.WithValue(r.Context(), "ctxValue", "ctxValueOK"))
+	r = r.WithContext(context.WithValue(r.Context(), "ctxValue", map[string]interface{}{
+		"nested": "nestedValue",
+	}))
 	tpl.Render(w, r, "home.test", tpl.D{"query": "OK"})
 }

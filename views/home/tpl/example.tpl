@@ -3,7 +3,8 @@
 {% block content %}
 
 Example: {{query}}
-<p>Context value - {{context("ctxValue")}}</p>
+<p>Context value - {{context("ctxValue").nested}}</p>
+<p>Admin URL - {{url("admin.index")}}</p>
 
 
 {% endblock %}
