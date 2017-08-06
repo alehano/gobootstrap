@@ -5,6 +5,20 @@ Root template must have name "base".
 Context value available by "context" name.
 To get value use: {{.context.Value "key"}}
 
+Example:
+
+var (
+	BaseTmpl = tmpl.NewSet().
+		SetPrefix("views/admin/tmpl/").
+		Add("base.tmpl").
+		AddFuncMap(common.DefaultTmplFuncMap)
+)
+
+func init()  {
+	tmpl.Register("admin.index", BaseTmpl.Add("index.tmpl"))
+	tmpl.Register("admin.login", BaseTmpl.Add("login.tmpl"))
+}
+
  */
 package tmpl
 
@@ -106,6 +120,7 @@ func (s Set) getFuncMapCombined() template.FuncMap {
 func Register(name string, set Set) {
 	if _, ok := store[name]; ok {
 		panic(fmt.Sprintf("Template %q already exists", name))
+		return 
 	}
 	if config.Get().Debug {
 		storeSets[name] = set

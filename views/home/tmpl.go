@@ -7,7 +7,7 @@ import 	(
 
 var tmplSet = common.BaseTmpl.SetPrefix("views/home/tmpl/")
 
-func init()  {
+func init() {
 
 	tmpl.Register("home.index", tmplSet.Add("index.tmpl"))
 
