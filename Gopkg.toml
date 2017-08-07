@@ -69,6 +69,10 @@
 
 [[dependencies]]
   branch = "master"
+  name = "github.com/flosch/pongo2"
+
+[[dependencies]]
+  branch = "master"
   name = "github.com/go-chi/chi"
 
 [[dependencies]]

@@ -3,7 +3,7 @@ package admin
 import (
 	"net/http"
 	"github.com/alehano/reverse"
-	"github.com/alehano/gobootstrap/sys/tmpl"
+	"github.com/alehano/gobootstrap/sys/tpl"
 	"github.com/alehano/gobootstrap/views/common"
 	"github.com/alehano/gobootstrap/config"
 	"golang.org/x/crypto/bcrypt"
@@ -11,16 +11,16 @@ import (
 )
 
 func index(w http.ResponseWriter, r *http.Request) {
-	tmpl.Render(w, r, "admin.index")
+	tpl.Render(w, r, "admin.index")
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
 	_, claims, _ := jwtauth.FromContext(r.Context())
 	if isAdmin, exists := claims.Get("is_admin"); exists && isAdmin.(bool) {
 		http.Redirect(w, r, reverse.Rev("admin.index"), http.StatusFound)
-		return 
+		return
 	}
-	tmpl.Render(w, r, "admin.login")
+	tpl.Render(w, r, "admin.login", tpl.D{"key": "value"})
 }
 
 func loginPost(w http.ResponseWriter, r *http.Request) {

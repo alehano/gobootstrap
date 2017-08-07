@@ -11,10 +11,7 @@ func init() {
 	urls.RegisterStatic(reverse.Add("static", "/static/"), "/views/common/static/")
 }
 
-
 func urlGroup(r chi.Router) {
-
 	r.NotFound(notFound)
-
-	urls.GetAndHead(r, "/robots.txt", RenderTmpl("common.robots_txt"))
+	urls.GetAndHead(r, "/robots.txt", robotsTxt)
 }

@@ -12,7 +12,8 @@ Web framework in Go focused on simplicity and flexibility.
 * Memcache support
 * CLI commands support
 * URL reverse
-* JWT Auth support
+* JWT based sessions
+* Pongo2 templates
 * Type safe config
 
 After cloning repo you have to rename any `github.com/alehano/gobootstrap` to 
@@ -77,6 +78,7 @@ jwt_secret: "secret"
 ## Some of used external packages:
 
 * [Chi](https://github.com/go-chi/chi)
+* [Pongo2](https://github.com/flosch/pongo2)
 * [Cobra](https://github.com/spf13/cobra)
 * [reverse](https://github.com/alehano/reverse)
 * [gohelpers](https://github.com/alehano/gohelpers)

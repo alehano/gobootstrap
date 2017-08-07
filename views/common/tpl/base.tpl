@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head lang=""> <!-- TODO: add lang form config-->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>{{page_title}}</title>
 </head>
 <body>
 
-{% block content %}Default content{% endblock %}
+{% block body %}
+{% block content %}{% endblock %}
+{% endblock %}
 
 </body>
 </html>

@@ -7,7 +7,7 @@ import (
 func init() {
 
 	tpl.RegisterMulti("views/home/tpl/", map[string]string{
-		"home.test": "example.tpl",
+		"home.index": "index.tpl",
 	})
 
 }

@@ -1,4 +1,4 @@
-memo = "4998607df8ff4a9f0ceb693a7cd2d26631514c498d277dd8dc41e0f862398b4d"
+memo = "bb736ab123a435fa43deb69354250da28cfa58ade992fb285715b3bad9050b81"
 
 [[projects]]
   branch = "master"
@@ -32,6 +32,12 @@ memo = "4998607df8ff4a9f0ceb693a7cd2d26631514c498d277dd8dc41e0f862398b4d"
 
 [[projects]]
   branch = "master"
+  name = "github.com/flosch/pongo2"
+  packages = ["."]
+  revision = "58f1f3387f7c57843ff829d92a759d08abe5a63f"
+
+[[projects]]
+  branch = "master"
   name = "github.com/go-chi/chi"
   packages = [".","middleware"]
   revision = "b8567b6442e27704bfeb725095091581cbe82a00"
@@ -59,6 +65,12 @@ memo = "4998607df8ff4a9f0ceb693a7cd2d26631514c498d277dd8dc41e0f862398b4d"
   name = "github.com/jmoiron/sqlx"
   packages = [".","reflectx"]
   revision = "f980a91bdc37abef88269b8f122d7de6352102f5"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/juju/errors"
+  packages = ["."]
+  revision = "c7d06af17c68cd34c835053720b21f6549d9b0ee"
 
 [[projects]]
   branch = "master"

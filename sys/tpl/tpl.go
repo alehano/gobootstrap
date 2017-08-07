@@ -7,7 +7,8 @@ import (
 	"github.com/alehano/gobootstrap/config"
 )
 
-type D map[string]interface{} // Syntax sugar alias
+type D map[string]interface{}
+
 var store = map[string]*pongo2.Template{}
 var storePaths = map[string]string{}
 var defaultData = map[string]interface{}{}
@@ -40,13 +41,20 @@ func RegisterDefaultData(data map[string]interface{}) {
 	}
 }
 
-func Render(w http.ResponseWriter, r *http.Request, name string, data map[string]interface{}) {
+func Render(w http.ResponseWriter, r *http.Request, name string, data ...map[string]interface{}) {
+	newData := map[string]interface{}{}
 	// Add Context
-	data["context"] = r.Context().Value
+	newData["context"] = r.Context().Value
+	// Add given data
+	if len(data) > 0 {
+		for key, value := range data[0] {
+			newData[key] = value
+		}
+	}
 	// Add default data
 	for key, value := range defaultData {
-		if _, dataExists := data[key]; !dataExists {
-			data[key] = value
+		if _, dataExists := newData[key]; !dataExists {
+			newData[key] = value
 		}
 	}
 
@@ -65,11 +73,17 @@ func Render(w http.ResponseWriter, r *http.Request, name string, data map[string
 	}
 
 	if exists {
-		err := t.ExecuteWriter(pongo2.Context(data), w)
+		err := t.ExecuteWriter(pongo2.Context(newData), w)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
 		http.Error(w, fmt.Sprintf("Template %q not exists", name), http.StatusInternalServerError)
+	}
+}
+
+func RenderHandler(name string, data ...map[string]interface{}) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		Render(w, r, name, data...)
 	}
 }
