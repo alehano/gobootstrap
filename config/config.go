@@ -13,9 +13,10 @@ package config
 var Version = "0.0.1"
 
 type cfg struct {
-	Debug             bool
-	Port              int
+	Debug             bool `yaml:"debug"`
+	Port              int `yaml:"port"`
 	ProjectPath       string `yaml:"project_path"`
+	Lang              string `yaml:"lang"`
 	WebsiteDomain     string `yaml:"website_domain"`
 	WebsiteProtocol   string `yaml:"website_protocol"`
 	AdminLogin        string `yaml:"admin_login"`
