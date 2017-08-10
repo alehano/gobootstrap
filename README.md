@@ -82,7 +82,7 @@ Framework has several built-in CLI command. To get list of commands, just run it
 
 ## Up and running
 
-To start server, run `go run main.go run_server` (you have to have defined `APP_CONFIG` environment variable with full path to config file).
+To start server, run `go run main.go run_server` (you have to have defined `APP_CONFIG` environment variable with full path to a config file).
 
 ## Some of used external packages:
 
