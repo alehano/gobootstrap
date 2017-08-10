@@ -62,6 +62,9 @@ get and save data.
 
 ## Example config file `config.yml`
 
+Config file can be load by either set environment variable "APP_CONFIG" with
+full path to .yml config file or by putting config.yml to the app working directory.
+
 ```yaml
 debug: true
 port: 8000
@@ -73,14 +76,22 @@ admin_password_hash: "$2a$10$5gCLP.GlOVBVFLtrzhoxfO5wsT0eiH7IsjzupA7ukTyI/znLFot
 jwt_secret: "secret"
 ```
 
+## Command line interface
+
+Framework has several built-in CLI command. To get list of commands, just run it without parameters.
+
+## Up and running
+
+To start server, run `go run main.go run_server` (you have to have defined `APP_CONFIG` environment variable for config file).
+
 ## Some of used external packages:
+
+Here is a list of used packages. You might read their docs to use them.
 
 * [Chi](https://github.com/go-chi/chi)
 * [Pongo2](https://github.com/flosch/pongo2)
-* [Cobra](https://github.com/spf13/cobra)
-* [reverse](https://github.com/alehano/reverse)
-* [gohelpers](https://github.com/alehano/gohelpers)
-* [govalidator](https://github.com/asaskevich/govalidator)
-* [gomemcache](https://github.com/bradfitz/gomemcache)
 * [sqlx](https://github.com/jmoiron/sqlx)
+* [reverse](https://github.com/alehano/reverse)
+* [Cobra](https://github.com/spf13/cobra)
+* [govalidator](https://github.com/asaskevich/govalidator)
 * [jwt-go](https://github.com/dgrijalva/jwt-go)
