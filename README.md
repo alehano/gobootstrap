@@ -62,7 +62,7 @@ get and save data.
 
 ## Example config file `config.yml`
 
-Config file can be load by either set environment variable "APP_CONFIG" with
+Config file can be loaded either by set environment variable "APP_CONFIG" with
 full path to .yml config file or by putting config.yml to the app working directory.
 
 ```yaml
@@ -82,7 +82,7 @@ Framework has several built-in CLI command. To get list of commands, just run it
 
 ## Up and running
 
-To start server, run `go run main.go run_server` (you have to have defined `APP_CONFIG` environment variable for config file).
+To start server, run `go run main.go run_server` (you have to have defined `APP_CONFIG` environment variable with full path to config file).
 
 ## Some of used external packages:
 
