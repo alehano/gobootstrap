@@ -86,7 +86,7 @@ To start server, run `go run main.go run_server` (you have to have defined `APP_
 
 ## Some of used external packages:
 
-Here is a list of used packages. You might read their docs to use them.
+Here is a list of used packages. You might have to read their docs to use them.
 
 * [Chi](https://github.com/go-chi/chi)
 * [Pongo2](https://github.com/flosch/pongo2)
