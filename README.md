@@ -1,7 +1,5 @@
 # Go Bootstrap
 
-# WARNING: It's under development
-
 Web framework in Go focused on simplicity and flexibility. 
 
 #### Main features:
