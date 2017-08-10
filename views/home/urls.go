@@ -12,4 +12,5 @@ func init() {
 
 func urlGroup(r chi.Router) {
 	urls.GetAndHead(r, reverse.Add("home.index", "/"), index)
+	urls.GetAndHead(r, reverse.Add("home.rest", "/rest"), rest)
 }
