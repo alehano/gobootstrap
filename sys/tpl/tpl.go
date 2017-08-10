@@ -82,6 +82,7 @@ func Render(w http.ResponseWriter, r *http.Request, name string, data ...map[str
 	}
 }
 
+// HTTP handler to use in URL router directly
 func RenderHandler(name string, data ...map[string]interface{}) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		Render(w, r, name, data...)

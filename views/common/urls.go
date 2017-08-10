@@ -4,6 +4,8 @@ import (
 	"github.com/alehano/gobootstrap/sys/urls"
 	"github.com/alehano/reverse"
 	"github.com/go-chi/chi"
+	"github.com/alehano/gobootstrap/sys/tpl"
+	"github.com/alehano/gobootstrap/config"
 )
 
 func init() {
@@ -12,6 +14,9 @@ func init() {
 }
 
 func urlGroup(r chi.Router) {
+
 	r.NotFound(notFound)
-	urls.GetAndHead(r, "/robots.txt", robotsTxt)
+
+	urls.GetAndHead(r, "/robots.txt", tpl.RenderHandler("common.robots_txt",
+		tpl.D{"host": config.WebsiteURL()}))
 }

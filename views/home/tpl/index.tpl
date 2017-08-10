@@ -2,9 +2,9 @@
 
 {% block content %}
 
-<h1>Homepage</h1>
-<p>Test value: {{testValue}}</p>
+<h1>GOBOOTSTRAP</h1>
+<p>Handler value: {{testValue}}</p>
 <p>Context value: {{context("ctxValue")}}</p>
-<p>Admin URL: {{url("admin.index")}}</p>
+<p>Admin URL: <a href="{{url("admin.index")}}">{{url("admin.index")}}</a></p>
 
 {% endblock %}

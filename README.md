@@ -14,7 +14,7 @@ Web framework in Go focused on simplicity and flexibility.
 * Pongo2 templates
 * Type safe config
 
-After cloning repo you have to rename any `github.com/alehano/gobootstrap` to 
+After cloning repo you have to rename all `github.com/alehano/gobootstrap` to 
 `{your project path}`. Feel free to modify source code as you want.
 
 ## Project Structure:

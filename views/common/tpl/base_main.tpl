@@ -2,10 +2,13 @@
 
 {% block body %}
 
-<p>HEADER</p>
+<!-- HEADER -->
 
 {% block content %}{% endblock %}
 
-<p>FOOTER</p>
+<!-- FOOTER -->
+
+<hr/>
+<a href="https://github.com/alehano/gobootstrap">GitHub</a>
 
 {% endblock %}
