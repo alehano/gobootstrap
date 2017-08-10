@@ -50,6 +50,12 @@
   revision = "e701090bf80b87b3f81b27edf0559ab044b11181"
 
 [[projects]]
+  name = "github.com/go-chi/render"
+  packages = ["."]
+  revision = "9f855fadd4b8cde7773f9ef51f6b2705af239519"
+  version = "v1.0.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/golang/snappy"
   packages = ["."]
@@ -118,6 +124,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7ecf2bb2ebdf6e6edc38edf476ebf93285e007e15f533b2d9b5a5cdda68d6af7"
+  inputs-digest = "c8939212839b1b9b05cda9baae8c10a557033d5d68b504eece37232a2400c009"
   solver-name = "gps-cdcl"
   solver-version = 1

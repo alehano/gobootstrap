@@ -16,14 +16,14 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 // Rest example
-func rest(w http.ResponseWriter, r *http.Request) {
-	data := struct {
+func json(w http.ResponseWriter, r *http.Request) {
+	type data struct {
 		Title string
 		Count int
-	}{
+	}
+	d := data{
 		Title: "Test",
 		Count: 42,
 	}
-
-	render.JSON(w, r, data)
+	render.JSON(w, r, d)
 }
