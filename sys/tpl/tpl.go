@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"github.com/alehano/gobootstrap/config"
+	"strings"
 )
 
 type D map[string]interface{}
@@ -13,11 +14,14 @@ var store = map[string]*pongo2.Template{}
 var storePaths = map[string]string{}
 var defaultData = map[string]interface{}{}
 
+// Register template by a name
+// Placeholder {{lang}} will be replaced by config lang value
 func Register(name, path string) {
 	if _, ok := store[name]; ok {
 		panic(fmt.Sprintf("Template %q already exists", name))
 		return
 	}
+	path = strings.Replace(path, "{{lang}}", config.Get().Lang, -1)
 	if config.Get().Debug {
 		storePaths[name] = path
 	} else {

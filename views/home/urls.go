@@ -11,6 +11,6 @@ func init() {
 }
 
 func urlGroup(r chi.Router) {
-	urls.GetAndHead(r, reverse.Add("home.index", "/"), index)
-	urls.GetAndHead(r, reverse.Add("home.json", "/json"), json)
+	r.Get(reverse.Add("home.index", "/"), index)
+	r.Get(reverse.Add("home.json", "/json"), json)
 }
