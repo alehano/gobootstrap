@@ -1,38 +1,45 @@
 language: go
 
 go:
-  - 1.0.2
-  - 1.0.3
-  - 1.1
-  - 1.2
-  - tip
+  - 1.5.x
+  - 1.6.x
+  - 1.7.x
+  - 1.8.x
+  - master
 
-before_install:
-  - psql --version
-  - sudo /etc/init.d/postgresql stop
-  - sudo apt-get -y --purge remove postgresql libpq-dev libpq5 postgresql-client-common postgresql-common
-  - sudo rm -rf /var/lib/postgresql
-  - wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-  - sudo sh -c "echo deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main $PGVERSION >> /etc/apt/sources.list.d/postgresql.list"
-  - sudo apt-get update -qq
-  - sudo apt-get -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::="--force-confnew" install postgresql-$PGVERSION postgresql-server-dev-$PGVERSION postgresql-contrib-$PGVERSION
-  - sudo chmod 777 /etc/postgresql/$PGVERSION/main/pg_hba.conf
-  - sudo echo "local   all         postgres                          trust" > /etc/postgresql/$PGVERSION/main/pg_hba.conf
-  - sudo echo "local   all         all                               trust" >> /etc/postgresql/$PGVERSION/main/pg_hba.conf
-  - sudo echo "host    all         all         127.0.0.1/32          trust" >> /etc/postgresql/$PGVERSION/main/pg_hba.conf
-  - sudo echo "host    all         all         ::1/128               trust" >> /etc/postgresql/$PGVERSION/main/pg_hba.conf
-  - sudo /etc/init.d/postgresql restart
+sudo: true
 
 env:
+  global:
+    - PGUSER=postgres
+    - PQGOSSLTESTS=1
+    - PQSSLCERTTEST_PATH=$PWD/certs
+    - PGHOST=127.0.0.1
   matrix:
+    - PGVERSION=9.6
+    - PGVERSION=9.5
+    - PGVERSION=9.4
     - PGVERSION=9.3
     - PGVERSION=9.2
     - PGVERSION=9.1
     - PGVERSION=9.0
-    - PGVERSION=8.4
 
-script:
- - env PGUSER=postgres go test -v ./...
+before_install:
+  - ./.travis.sh postgresql_uninstall
+  - ./.travis.sh pgdg_repository
+  - ./.travis.sh postgresql_install
+  - ./.travis.sh postgresql_configure
+  - ./.travis.sh client_configure
+  - go get golang.org/x/tools/cmd/goimports
 
 before_script:
- - psql -c 'create database pqgotest;' -U postgres
+  - createdb pqgotest
+  - createuser -DRS pqgossltest
+  - createuser -DRS pqgosslcert
+
+script:
+  - >
+    goimports -d -e $(find -name '*.go') | awk '{ print } END { exit NR == 0 ? 0 : 1 }'
+  - go vet ./...
+  - PQTEST_BINARY_PARAMETERS=no  go test -race -v ./...
+  - PQTEST_BINARY_PARAMETERS=yes go test -race -v ./...

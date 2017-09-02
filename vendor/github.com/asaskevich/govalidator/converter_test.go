@@ -1,6 +1,9 @@
 package govalidator
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestToInt(t *testing.T) {
 	tests := []string{"1000", "-123", "abcdef", "100000000000000000000000000000000000000000000"}
@@ -39,7 +42,7 @@ func TestToString(t *testing.T) {
 	toString(t, 123, "123")
 	toString(t, 12.3, "12.3")
 	toString(t, true, "true")
-	toString(t, 1.5 + 10i, "(1.5+10i)")
+	toString(t, 1.5+10i, "(1.5+10i)")
 	// Sprintf function not guarantee that maps with equal keys always will be equal in string  representation
 	//toString(t, struct{ Keys map[int]int }{Keys: map[int]int{1: 2, 3: 4}}, "{map[1:2 3:4]}")
 }
@@ -52,6 +55,24 @@ func TestToFloat(t *testing.T) {
 		if res != expected[i] {
 			t.Log("Case ", i, ": expected ", expected[i], " when result is ", res)
 			t.FailNow()
+		}
+	}
+}
+
+func TestToJSON(t *testing.T) {
+	tests := []interface{}{"test", map[string]string{"a": "b", "b": "c"}, func() error { return fmt.Errorf("Error") }}
+	expected := [][]string{
+		[]string{"\"test\"", "<nil>"},
+		[]string{"{\"a\":\"b\",\"b\":\"c\"}", "<nil>"},
+		[]string{"", "json: unsupported type: func() error"},
+	}
+	for i, test := range tests {
+		actual, err := ToJSON(test)
+		if actual != expected[i][0] {
+			t.Errorf("Expected toJSON(%v) to return '%v', got '%v'", test, expected[i][0], actual)
+		}
+		if fmt.Sprintf("%v", err) != expected[i][1] {
+			t.Errorf("Expected error returned from toJSON(%v) to return '%v', got '%v'", test, expected[i][1], fmt.Sprintf("%v", err))
 		}
 	}
 }

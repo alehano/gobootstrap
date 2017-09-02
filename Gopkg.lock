@@ -11,13 +11,13 @@
   branch = "master"
   name = "github.com/alehano/reverse"
   packages = ["."]
-  revision = "3fcb5f6be87e83d4780e7ca0733bd0ca8c0ff539"
+  revision = "bf1a1f8f8b825d41fe42faa1b6e84d5819ac8ae4"
 
 [[projects]]
-  branch = "master"
   name = "github.com/asaskevich/govalidator"
   packages = ["."]
-  revision = "866354b2921d468a6463cf1ea2bf00cc597c9aaa"
+  revision = "4918b99a7cb949bb295f3c7bbaf24b577d806e35"
+  version = "v6"
 
 [[projects]]
   branch = "master"
@@ -26,28 +26,28 @@
   revision = "1952afaa557dc08e8e0d89eafab110fb501c1a2b"
 
 [[projects]]
-  branch = "master"
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
-  revision = "a539ee1a749a2b895533f979515ac7e6e0f5b650"
+  revision = "d2709f9f1f31ebcda9651b03077758c1f3a0018c"
+  version = "v3.0.0"
 
 [[projects]]
-  branch = "master"
   name = "github.com/flosch/pongo2"
   packages = ["."]
-  revision = "58f1f3387f7c57843ff829d92a759d08abe5a63f"
+  revision = "5e81b817a0c48c1c57cdf1a9056cf76bdee02ca9"
+  version = "v3.0"
 
 [[projects]]
-  branch = "master"
   name = "github.com/go-chi/chi"
   packages = [".","middleware"]
-  revision = "b8567b6442e27704bfeb725095091581cbe82a00"
+  revision = "04ec7fc4179604b2390947258f9143eaae23b596"
+  version = "v3.2.1"
 
 [[projects]]
-  branch = "master"
   name = "github.com/go-chi/jwtauth"
   packages = ["."]
   revision = "e701090bf80b87b3f81b27edf0559ab044b11181"
+  version = "v3.0.2"
 
 [[projects]]
   name = "github.com/go-chi/render"
@@ -59,7 +59,7 @@
   branch = "master"
   name = "github.com/golang/snappy"
   packages = ["."]
-  revision = "d9eb7a3d35ec988b8585d4a0068e462c27d28380"
+  revision = "553a641470496b2327abcac10b36396bd98e45c9"
 
 [[projects]]
   name = "github.com/inconshreveable/mousetrap"
@@ -71,59 +71,53 @@
   branch = "master"
   name = "github.com/jmoiron/sqlx"
   packages = [".","reflectx"]
-  revision = "f980a91bdc37abef88269b8f122d7de6352102f5"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/juju/errors"
-  packages = ["."]
-  revision = "c7d06af17c68cd34c835053720b21f6549d9b0ee"
+  revision = "d9bd385d68c068f1fabb5057e3dedcbcbb039d0f"
 
 [[projects]]
   branch = "master"
   name = "github.com/lib/pq"
   packages = [".","oid"]
-  revision = "ae7391529ced9c12f06bf01eae33dadb4c70e49f"
+  revision = "e42267488fe361b9dc034be7a6bffef5b195bceb"
 
 [[projects]]
   name = "github.com/sirupsen/logrus"
   packages = ["."]
-  revision = "a3f95b5c423586578a4e099b11a46c2479628cac"
-  version = "1.0.2"
+  revision = "f006c2ac4710855cf0f916dd6b77acf6b048dc6e"
+  version = "v1.0.3"
 
 [[projects]]
   branch = "master"
   name = "github.com/spf13/cobra"
   packages = ["."]
-  revision = "d7ba19510d17ff09130f842c8c2eb48f4196b6ee"
+  revision = "3c0b56b677e04926dfa835a1b3f11cd4f62f076e"
 
 [[projects]]
-  branch = "master"
   name = "github.com/spf13/pflag"
   packages = ["."]
   revision = "e57e3eeb33f795204c1ca35f56c44f83227c6e66"
+  version = "v1.0.0"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["bcrypt","blowfish"]
-  revision = "122d919ec1efcfb58483215da23f815853e24b81"
+  packages = ["bcrypt","blowfish","ssh/terminal"]
+  revision = "81e90905daefcd6fd217b62423c0908922eadb30"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = ["unix"]
-  revision = "e42485b6e20ae7d2304ec72e535b103ed350cc02"
+  packages = ["unix","windows"]
+  revision = "7ddbeae9ae08c6a06a59597f0c9edbc5ff2444ce"
 
 [[projects]]
-  branch = "master"
+  branch = "v2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "25c4ec802a7d637f88d584ab26798e94ad14c13b"
+  revision = "eb3733d160e74a9c7e442f435eb3bea458e1d19f"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c8939212839b1b9b05cda9baae8c10a557033d5d68b504eece37232a2400c009"
+  inputs-digest = "54600e4069ab58ddac386ea925f559b07956a92867f56ac5b47518d43ea29479"
   solver-name = "gps-cdcl"
   solver-version = 1

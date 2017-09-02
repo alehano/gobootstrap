@@ -35,8 +35,6 @@ import (
 	"strings"
 	"time"
 	"unicode/utf8"
-
-	"github.com/juju/errors"
 )
 
 func init() {
@@ -75,15 +73,14 @@ func init() {
 	RegisterFilter("removetags", filterRemovetags)
 	RegisterFilter("rjust", filterRjust)
 	RegisterFilter("slice", filterSlice)
-	RegisterFilter("split", filterSplit)
 	RegisterFilter("stringformat", filterStringformat)
 	RegisterFilter("striptags", filterStriptags)
 	RegisterFilter("time", filterDate) // time uses filterDate (same golang-format)
 	RegisterFilter("title", filterTitle)
 	RegisterFilter("truncatechars", filterTruncatechars)
-	RegisterFilter("truncatechars_html", filterTruncatecharsHTML)
+	RegisterFilter("truncatechars_html", filterTruncatecharsHtml)
 	RegisterFilter("truncatewords", filterTruncatewords)
-	RegisterFilter("truncatewords_html", filterTruncatewordsHTML)
+	RegisterFilter("truncatewords_html", filterTruncatewordsHtml)
 	RegisterFilter("upper", filterUpper)
 	RegisterFilter("urlencode", filterUrlencode)
 	RegisterFilter("urlize", filterUrlize)
@@ -108,9 +105,9 @@ func filterTruncatecharsHelper(s string, newLen int) string {
 	return string(runes)
 }
 
-func filterTruncateHTMLHelper(value string, newOutput *bytes.Buffer, cond func() bool, fn func(c rune, s int, idx int) int, finalize func()) {
+func filterTruncateHtmlHelper(value string, new_output *bytes.Buffer, cond func() bool, fn func(c rune, s int, idx int) int, finalize func()) {
 	vLen := len(value)
-	var tagStack []string
+	tag_stack := make([]string, 0)
 	idx := 0
 
 	for idx < vLen && !cond() {
@@ -121,17 +118,17 @@ func filterTruncateHTMLHelper(value string, newOutput *bytes.Buffer, cond func()
 		}
 
 		if c == '<' {
-			newOutput.WriteRune(c)
+			new_output.WriteRune(c)
 			idx += s // consume "<"
 
 			if idx+1 < vLen {
 				if value[idx] == '/' {
 					// Close tag
 
-					newOutput.WriteString("/")
+					new_output.WriteString("/")
 
 					tag := ""
-					idx++ // consume "/"
+					idx += 1 // consume "/"
 
 					for idx < vLen {
 						c2, size2 := utf8.DecodeRuneInString(value[idx:])
@@ -149,21 +146,21 @@ func filterTruncateHTMLHelper(value string, newOutput *bytes.Buffer, cond func()
 						idx += size2
 					}
 
-					if len(tagStack) > 0 {
+					if len(tag_stack) > 0 {
 						// Ideally, the close tag is TOP of tag stack
 						// In malformed HTML, it must not be, so iterate through the stack and remove the tag
-						for i := len(tagStack) - 1; i >= 0; i-- {
-							if tagStack[i] == tag {
+						for i := len(tag_stack) - 1; i >= 0; i-- {
+							if tag_stack[i] == tag {
 								// Found the tag
-								tagStack[i] = tagStack[len(tagStack)-1]
-								tagStack = tagStack[:len(tagStack)-1]
+								tag_stack[i] = tag_stack[len(tag_stack)-1]
+								tag_stack = tag_stack[:len(tag_stack)-1]
 								break
 							}
 						}
 					}
 
-					newOutput.WriteString(tag)
-					newOutput.WriteString(">")
+					new_output.WriteString(tag)
+					new_output.WriteString(">")
 				} else {
 					// Open tag
 
@@ -177,7 +174,7 @@ func filterTruncateHTMLHelper(value string, newOutput *bytes.Buffer, cond func()
 							continue
 						}
 
-						newOutput.WriteRune(c2)
+						new_output.WriteRune(c2)
 
 						// End of tag found
 						if c2 == '>' {
@@ -197,7 +194,7 @@ func filterTruncateHTMLHelper(value string, newOutput *bytes.Buffer, cond func()
 					}
 
 					// Add tag to stack
-					tagStack = append(tagStack, tag)
+					tag_stack = append(tag_stack, tag)
 				}
 			}
 		} else {
@@ -207,10 +204,10 @@ func filterTruncateHTMLHelper(value string, newOutput *bytes.Buffer, cond func()
 
 	finalize()
 
-	for i := len(tagStack) - 1; i >= 0; i-- {
-		tag := tagStack[i]
+	for i := len(tag_stack) - 1; i >= 0; i-- {
+		tag := tag_stack[i]
 		// Close everything from the regular tag stack
-		newOutput.WriteString(fmt.Sprintf("</%s>", tag))
+		new_output.WriteString(fmt.Sprintf("</%s>", tag))
 	}
 }
 
@@ -220,28 +217,28 @@ func filterTruncatechars(in *Value, param *Value) (*Value, *Error) {
 	return AsValue(filterTruncatecharsHelper(s, newLen)), nil
 }
 
-func filterTruncatecharsHTML(in *Value, param *Value) (*Value, *Error) {
+func filterTruncatecharsHtml(in *Value, param *Value) (*Value, *Error) {
 	value := in.String()
 	newLen := max(param.Integer()-3, 0)
 
-	newOutput := bytes.NewBuffer(nil)
+	new_output := bytes.NewBuffer(nil)
 
 	textcounter := 0
 
-	filterTruncateHTMLHelper(value, newOutput, func() bool {
+	filterTruncateHtmlHelper(value, new_output, func() bool {
 		return textcounter >= newLen
 	}, func(c rune, s int, idx int) int {
 		textcounter++
-		newOutput.WriteRune(c)
+		new_output.WriteRune(c)
 
 		return idx + s
 	}, func() {
 		if textcounter >= newLen && textcounter < len(value) {
-			newOutput.WriteString("...")
+			new_output.WriteString("...")
 		}
 	})
 
-	return AsSafeValue(newOutput.String()), nil
+	return AsSafeValue(new_output.String()), nil
 }
 
 func filterTruncatewords(in *Value, param *Value) (*Value, *Error) {
@@ -263,19 +260,19 @@ func filterTruncatewords(in *Value, param *Value) (*Value, *Error) {
 	return AsValue(strings.Join(out, " ")), nil
 }
 
-func filterTruncatewordsHTML(in *Value, param *Value) (*Value, *Error) {
+func filterTruncatewordsHtml(in *Value, param *Value) (*Value, *Error) {
 	value := in.String()
 	newLen := max(param.Integer(), 0)
 
-	newOutput := bytes.NewBuffer(nil)
+	new_output := bytes.NewBuffer(nil)
 
 	wordcounter := 0
 
-	filterTruncateHTMLHelper(value, newOutput, func() bool {
+	filterTruncateHtmlHelper(value, new_output, func() bool {
 		return wordcounter >= newLen
 	}, func(_ rune, _ int, idx int) int {
 		// Get next word
-		wordFound := false
+		word_found := false
 
 		for idx < len(value) {
 			c2, size2 := utf8.DecodeRuneInString(value[idx:])
@@ -289,29 +286,29 @@ func filterTruncatewordsHTML(in *Value, param *Value) (*Value, *Error) {
 				return idx
 			}
 
-			newOutput.WriteRune(c2)
+			new_output.WriteRune(c2)
 			idx += size2
 
 			if c2 == ' ' || c2 == '.' || c2 == ',' || c2 == ';' {
 				// Word ends here, stop capturing it now
 				break
 			} else {
-				wordFound = true
+				word_found = true
 			}
 		}
 
-		if wordFound {
+		if word_found {
 			wordcounter++
 		}
 
 		return idx
 	}, func() {
 		if wordcounter >= newLen {
-			newOutput.WriteString("...")
+			new_output.WriteString("...")
 		}
 	})
 
-	return AsSafeValue(newOutput.String()), nil
+	return AsSafeValue(new_output.String()), nil
 }
 
 func filterEscape(in *Value, param *Value) (*Value, *Error) {
@@ -380,11 +377,12 @@ func filterAdd(in *Value, param *Value) (*Value, *Error) {
 	if in.IsNumber() && param.IsNumber() {
 		if in.IsFloat() || param.IsFloat() {
 			return AsValue(in.Float() + param.Float()), nil
+		} else {
+			return AsValue(in.Integer() + param.Integer()), nil
 		}
-		return AsValue(in.Integer() + param.Integer()), nil
 	}
 	// If in/param is not a number, we're relying on the
-	// Value's String() conversion and just add them both together
+	// Value's String() convertion and just add them both together
 	return AsValue(in.String() + param.String()), nil
 }
 
@@ -552,11 +550,11 @@ func filterCenter(in *Value, param *Value) (*Value, *Error) {
 }
 
 func filterDate(in *Value, param *Value) (*Value, *Error) {
-	t, isTime := in.Interface().(time.Time)
-	if !isTime {
+	t, is_time := in.Interface().(time.Time)
+	if !is_time {
 		return nil, &Error{
-			Sender:    "filter:date",
-			OrigError: errors.New("filter input argument must be of type 'time.Time'"),
+			Sender:   "filter:date",
+			ErrorMsg: "Filter input argument must be of type 'time.Time'.",
 		}
 	}
 	return AsValue(t.Format(param.String())), nil
@@ -614,12 +612,6 @@ func filterLinebreaks(in *Value, param *Value) (*Value, *Error) {
 	return AsValue(b.String()), nil
 }
 
-func filterSplit(in *Value, param *Value) (*Value, *Error) {
-	chunks := strings.Split(in.String(), param.String())
-
-	return AsValue(chunks), nil
-}
-
 func filterLinebreaksbr(in *Value, param *Value) (*Value, *Error) {
 	return AsValue(strings.Replace(in.String(), "\n", "<br />", -1)), nil
 }
@@ -649,8 +641,7 @@ func filterUrlencode(in *Value, param *Value) (*Value, *Error) {
 var filterUrlizeURLRegexp = regexp.MustCompile(`((((http|https)://)|www\.|((^|[ ])[0-9A-Za-z_\-]+(\.com|\.net|\.org|\.info|\.biz|\.de))))(?U:.*)([ ]+|$)`)
 var filterUrlizeEmailRegexp = regexp.MustCompile(`(\w+@\w+\.\w{2,4})`)
 
-func filterUrlizeHelper(input string, autoescape bool, trunc int) (string, error) {
-	var soutErr error
+func filterUrlizeHelper(input string, autoescape bool, trunc int) string {
 	sout := filterUrlizeURLRegexp.ReplaceAllStringFunc(input, func(raw_url string) string {
 		var prefix string
 		var suffix string
@@ -665,8 +656,7 @@ func filterUrlizeHelper(input string, autoescape bool, trunc int) (string, error
 
 		t, err := ApplyFilter("iriencode", AsValue(raw_url), nil)
 		if err != nil {
-			soutErr = err
-			return ""
+			panic(err)
 		}
 		url := t.String()
 
@@ -683,19 +673,16 @@ func filterUrlizeHelper(input string, autoescape bool, trunc int) (string, error
 		if autoescape {
 			t, err := ApplyFilter("escape", AsValue(title), nil)
 			if err != nil {
-				soutErr = err
-				return ""
+				panic(err)
 			}
 			title = t.String()
 		}
 
 		return fmt.Sprintf(`%s<a href="%s" rel="nofollow">%s</a>%s`, prefix, url, title, suffix)
 	})
-	if soutErr != nil {
-		return "", soutErr
-	}
 
 	sout = filterUrlizeEmailRegexp.ReplaceAllStringFunc(sout, func(mail string) string {
+
 		title := mail
 
 		if trunc > 3 && len(title) > trunc {
@@ -705,7 +692,7 @@ func filterUrlizeHelper(input string, autoescape bool, trunc int) (string, error
 		return fmt.Sprintf(`<a href="mailto:%s">%s</a>`, mail, title)
 	})
 
-	return sout, nil
+	return sout
 }
 
 func filterUrlize(in *Value, param *Value) (*Value, *Error) {
@@ -714,36 +701,24 @@ func filterUrlize(in *Value, param *Value) (*Value, *Error) {
 		autoescape = param.Bool()
 	}
 
-	s, err := filterUrlizeHelper(in.String(), autoescape, -1)
-	if err != nil {
-
-	}
-
-	return AsValue(s), nil
+	return AsValue(filterUrlizeHelper(in.String(), autoescape, -1)), nil
 }
 
 func filterUrlizetrunc(in *Value, param *Value) (*Value, *Error) {
-	s, err := filterUrlizeHelper(in.String(), true, param.Integer())
-	if err != nil {
-		return nil, &Error{
-			Sender:    "filter:urlizetrunc",
-			OrigError: errors.New("you cannot pass more than 2 arguments to filter 'pluralize'"),
-		}
-	}
-	return AsValue(s), nil
+	return AsValue(filterUrlizeHelper(in.String(), true, param.Integer())), nil
 }
 
 func filterStringformat(in *Value, param *Value) (*Value, *Error) {
 	return AsValue(fmt.Sprintf(param.String(), in.Interface())), nil
 }
 
-var reStriptags = regexp.MustCompile("<[^>]*?>")
+var re_striptags = regexp.MustCompile("<[^>]*?>")
 
 func filterStriptags(in *Value, param *Value) (*Value, *Error) {
 	s := in.String()
 
 	// Strip all tags
-	s = reStriptags.ReplaceAllString(s, "")
+	s = re_striptags.ReplaceAllString(s, "")
 
 	return AsValue(strings.TrimSpace(s)), nil
 }
@@ -771,8 +746,8 @@ func filterPluralize(in *Value, param *Value) (*Value, *Error) {
 			endings := strings.Split(param.String(), ",")
 			if len(endings) > 2 {
 				return nil, &Error{
-					Sender:    "filter:pluralize",
-					OrigError: errors.New("you cannot pass more than 2 arguments to filter 'pluralize'"),
+					Sender:   "filter:pluralize",
+					ErrorMsg: "You cannot pass more than 2 arguments to filter 'pluralize'.",
 				}
 			}
 			if len(endings) == 1 {
@@ -795,10 +770,11 @@ func filterPluralize(in *Value, param *Value) (*Value, *Error) {
 		}
 
 		return AsValue(""), nil
-	}
-	return nil, &Error{
-		Sender:    "filter:pluralize",
-		OrigError: errors.New("filter 'pluralize' does only work on numbers"),
+	} else {
+		return nil, &Error{
+			Sender:   "filter:pluralize",
+			ErrorMsg: "Filter 'pluralize' does only work on numbers.",
+		}
 	}
 }
 
@@ -831,8 +807,8 @@ func filterSlice(in *Value, param *Value) (*Value, *Error) {
 	comp := strings.Split(param.String(), ":")
 	if len(comp) != 2 {
 		return nil, &Error{
-			Sender:    "filter:slice",
-			OrigError: errors.New("Slice string must have the format 'from:to' [from/to can be omitted, but the ':' is required]"),
+			Sender:   "filter:slice",
+			ErrorMsg: "Slice string must have the format 'from:to' [from/to can be omitted, but the ':' is required]",
 		}
 	}
 
@@ -868,16 +844,16 @@ func filterWordcount(in *Value, param *Value) (*Value, *Error) {
 
 func filterWordwrap(in *Value, param *Value) (*Value, *Error) {
 	words := strings.Fields(in.String())
-	wordsLen := len(words)
-	wrapAt := param.Integer()
-	if wrapAt <= 0 {
+	words_len := len(words)
+	wrap_at := param.Integer()
+	if wrap_at <= 0 {
 		return in, nil
 	}
 
-	linecount := wordsLen/wrapAt + wordsLen%wrapAt
+	linecount := words_len/wrap_at + words_len%wrap_at
 	lines := make([]string, 0, linecount)
 	for i := 0; i < linecount; i++ {
-		lines = append(lines, strings.Join(words[wrapAt*i:min(wrapAt*(i+1), wordsLen)], " "))
+		lines = append(lines, strings.Join(words[wrap_at*i:min(wrap_at*(i+1), words_len)], " "))
 	}
 	return AsValue(strings.Join(lines, "\n")), nil
 }
@@ -888,27 +864,27 @@ func filterYesno(in *Value, param *Value) (*Value, *Error) {
 		1: "no",
 		2: "maybe",
 	}
-	paramString := param.String()
-	customChoices := strings.Split(paramString, ",")
-	if len(paramString) > 0 {
-		if len(customChoices) > 3 {
+	param_string := param.String()
+	custom_choices := strings.Split(param_string, ",")
+	if len(param_string) > 0 {
+		if len(custom_choices) > 3 {
 			return nil, &Error{
-				Sender:    "filter:yesno",
-				OrigError: errors.Errorf("You cannot pass more than 3 options to the 'yesno'-filter (got: '%s').", paramString),
+				Sender:   "filter:yesno",
+				ErrorMsg: fmt.Sprintf("You cannot pass more than 3 options to the 'yesno'-filter (got: '%s').", param_string),
 			}
 		}
-		if len(customChoices) < 2 {
+		if len(custom_choices) < 2 {
 			return nil, &Error{
-				Sender:    "filter:yesno",
-				OrigError: errors.Errorf("You must pass either no or at least 2 arguments to the 'yesno'-filter (got: '%s').", paramString),
+				Sender:   "filter:yesno",
+				ErrorMsg: fmt.Sprintf("You must pass either no or at least 2 arguments to the 'yesno'-filter (got: '%s').", param_string),
 			}
 		}
 
 		// Map to the options now
-		choices[0] = customChoices[0]
-		choices[1] = customChoices[1]
-		if len(customChoices) == 3 {
-			choices[2] = customChoices[2]
+		choices[0] = custom_choices[0]
+		choices[1] = custom_choices[1]
+		if len(custom_choices) == 3 {
+			choices[2] = custom_choices[2]
 		}
 	}
 

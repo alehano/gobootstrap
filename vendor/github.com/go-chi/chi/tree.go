@@ -120,7 +120,7 @@ func (n *node) InsertRoute(method methodTyp, pattern string, handler http.Handle
 
 		// We're going to be searching for a wild node next,
 		// in this case, we need to get the tail
-		var label byte = search[0]
+		var label = search[0]
 		var segTail byte
 		var segEndIdx int
 		var segTyp nodeTyp
@@ -341,7 +341,7 @@ func (n *node) setEndpoint(method methodTyp, handler http.Handler, pattern strin
 	}
 }
 
-func (n *node) FindRoute(rctx *Context, method methodTyp, path string) endpoints {
+func (n *node) FindRoute(rctx *Context, method methodTyp, path string) (*node, endpoints, http.Handler) {
 	// Reset the context routing pattern and params
 	rctx.routePattern = ""
 	rctx.routeParams.Keys = rctx.routeParams.Keys[:0]
@@ -350,7 +350,7 @@ func (n *node) FindRoute(rctx *Context, method methodTyp, path string) endpoints
 	// Find the routing handlers for the path
 	rn := n.findRoute(rctx, method, path)
 	if rn == nil {
-		return nil
+		return nil, nil, nil
 	}
 
 	// Record the routing params in the request lifecycle
@@ -363,7 +363,7 @@ func (n *node) FindRoute(rctx *Context, method methodTyp, path string) endpoints
 		rctx.RoutePatterns = append(rctx.RoutePatterns, rctx.routePattern)
 	}
 
-	return rn.endpoints
+	return rn, rn.endpoints, rn.endpoints[method].handler
 }
 
 // Recursive edge traversal by checking all nodeTyp groups along the way.
@@ -447,11 +447,11 @@ func (n *node) findRoute(rctx *Context, method methodTyp, path string) *node {
 				if h != nil && h.handler != nil {
 					rctx.routeParams.Keys = append(rctx.routeParams.Keys, h.paramKeys...)
 					return xn
-				} else {
-					// flag that the routing context found a route, but not a corresponding
-					// supported method
-					rctx.methodNotAllowed = true
 				}
+
+				// flag that the routing context found a route, but not a corresponding
+				// supported method
+				rctx.methodNotAllowed = true
 			}
 		}
 
@@ -514,7 +514,7 @@ func (n *node) isLeaf() bool {
 	return n.endpoints != nil
 }
 
-func (n *node) matchPattern(pattern string) bool {
+func (n *node) findPattern(pattern string) bool {
 	nn := n
 	for _, nds := range nn.children {
 		if len(nds) == 0 {
@@ -551,7 +551,7 @@ func (n *node) matchPattern(pattern string) bool {
 			return true
 		}
 
-		return n.matchPattern(xpattern)
+		return n.findPattern(xpattern)
 	}
 	return false
 }
@@ -643,13 +643,27 @@ func patNextSegment(pattern string) (nodeTyp, string, string, byte, int, int) {
 	if ps >= 0 {
 		// Param/Regexp pattern is next
 		nt := ntParam
-		pe := strings.Index(pattern, "}")
-		if pe < 0 {
+
+		// Read to closing } taking into account opens and closes in curl count (cc)
+		cc := 0
+		pe := ps
+		for i, c := range pattern[ps:] {
+			if c == '{' {
+				cc++
+			} else if c == '}' {
+				cc--
+				if cc == 0 {
+					pe = ps + i
+					break
+				}
+			}
+		}
+		if pe == ps {
 			panic("chi: route param closing delimiter '}' is missing")
 		}
 
 		key := pattern[ps+1 : pe]
-		pe += 1 // set end to next position
+		pe++ // set end to next position
 
 		if pe < len(pattern) {
 			tail = pattern[pe]
@@ -663,13 +677,11 @@ func patNextSegment(pattern string) (nodeTyp, string, string, byte, int, int) {
 		}
 
 		return nt, key, rexpat, tail, ps, pe
-	} else {
-		// Wildcard pattern is next
-
-		// TODO: should we panic if there is stuff after the * ???
-
-		return ntCatchAll, "*", "", 0, ws, len(pattern)
 	}
+
+	// Wildcard pattern as finale
+	// TODO: should we panic if there is stuff after the * ???
+	return ntCatchAll, "*", "", 0, ws, len(pattern)
 }
 
 func patParamKeys(pattern string) []string {
@@ -688,7 +700,6 @@ func patParamKeys(pattern string) []string {
 		paramKeys = append(paramKeys, paramKey)
 		pat = pat[e:]
 	}
-	return paramKeys
 }
 
 // longestPrefix finds the length of the shared prefix
@@ -755,6 +766,7 @@ func (ns nodes) findEdge(label byte) *node {
 	return ns[idx]
 }
 
+// Route describes the details of a routing handler.
 type Route struct {
 	Pattern   string
 	Handlers  map[string]http.Handler

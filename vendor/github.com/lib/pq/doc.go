@@ -5,8 +5,9 @@ In most cases clients will use the database/sql package instead of
 using this package directly. For example:
 
 	import (
-		_ "github.com/lib/pq"
 		"database/sql"
+
+		_ "github.com/lib/pq"
 	)
 
 	func main() {
@@ -47,12 +48,16 @@ supported:
 	* sslmode - Whether or not to use SSL (default is require, this is not the default for libpq)
 	* fallback_application_name - An application_name to fall back to if one isn't provided.
 	* connect_timeout - Maximum wait for connection, in seconds. Zero or not specified means wait indefinitely.
+	* sslcert - Cert file location. The file must contain PEM encoded data.
+	* sslkey - Key file location. The file must contain PEM encoded data.
+	* sslrootcert - The location of the root certificate file. The file must contain PEM encoded data.
 
 Valid values for sslmode are:
 
 	* disable - No SSL
 	* require - Always SSL (skip verification)
-	* verify-full - Always SSL (require verification)
+	* verify-ca - Always SSL (verify that the certificate presented by the server was signed by a trusted CA)
+	* verify-full - Always SSL (verify that the certification presented by the server was signed by a trusted CA and the server host name matches the one in the certificate)
 
 See http://www.postgresql.org/docs/current/static/libpq-connect.html#LIBPQ-CONNSTRING
 for more information about connection string parameters.
@@ -81,8 +86,12 @@ variables not supported by pq are set, pq will panic during connection
 establishment.  Environment variables have a lower precedence than explicitly
 provided connection parameters.
 
+The pgpass mechanism as described in http://www.postgresql.org/docs/current/static/libpq-pgpass.html
+is supported, but on Windows PGPASSFILE must be specified explicitly.
+
 
 Queries
+
 
 database/sql does not dictate any specific format for parameter
 markers in query strings, and pq uses the Postgres-native ordinal markers,
@@ -107,7 +116,28 @@ For more details on RETURNING, see the Postgres documentation:
 
 For additional instructions on querying see the documentation for the database/sql package.
 
+
+Data Types
+
+
+Parameters pass through driver.DefaultParameterConverter before they are handled
+by this package. When the binary_parameters connection option is enabled,
+[]byte values are sent directly to the backend as data in binary format.
+
+This package returns the following types for values from the PostgreSQL backend:
+
+	- integer types smallint, integer, and bigint are returned as int64
+	- floating-point types real and double precision are returned as float64
+	- character types char, varchar, and text are returned as string
+	- temporal types date, time, timetz, timestamp, and timestamptz are returned as time.Time
+	- the boolean type is returned as bool
+	- the bytea type is returned as []byte
+
+All other types are returned directly from the backend as []byte values in text format.
+
+
 Errors
+
 
 pq may return errors of type *pq.Error which can be interrogated for error details:
 

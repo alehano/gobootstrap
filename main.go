@@ -44,6 +44,7 @@ func runServer() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.RedirectSlashes)
+	r.Use(middleware.GetHead)
 	urls.AddAll(r)
 	http.ListenAndServe(fmt.Sprintf(":%d", config.Get().Port), r)
 }

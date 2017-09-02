@@ -3,7 +3,6 @@ package pongo2
 import (
 	"fmt"
 	"reflect"
-	"sort"
 	"strconv"
 	"strings"
 )
@@ -13,7 +12,7 @@ type Value struct {
 	safe bool // used to indicate whether a Value needs explicit escaping in the template
 }
 
-// AsValue converts any given value to a pongo2.Value
+// Converts any given value to a pongo2.Value
 // Usually being used within own functions passed to a template
 // through a Context or within filter functions.
 //
@@ -25,7 +24,7 @@ func AsValue(i interface{}) *Value {
 	}
 }
 
-// AsSafeValue works like AsValue, but does not apply the 'escape' filter.
+// Like AsValue, but does not apply the 'escape' filter.
 func AsSafeValue(i interface{}) *Value {
 	return &Value{
 		val:  reflect.ValueOf(i),
@@ -40,23 +39,23 @@ func (v *Value) getResolvedValue() reflect.Value {
 	return v.val
 }
 
-// IsString checks whether the underlying value is a string
+// Checks whether the underlying value is a string
 func (v *Value) IsString() bool {
 	return v.getResolvedValue().Kind() == reflect.String
 }
 
-// IsBool checks whether the underlying value is a bool
+// Checks whether the underlying value is a bool
 func (v *Value) IsBool() bool {
 	return v.getResolvedValue().Kind() == reflect.Bool
 }
 
-// IsFloat checks whether the underlying value is a float
+// Checks whether the underlying value is a float
 func (v *Value) IsFloat() bool {
 	return v.getResolvedValue().Kind() == reflect.Float32 ||
 		v.getResolvedValue().Kind() == reflect.Float64
 }
 
-// IsInteger checks whether the underlying value is an integer
+// Checks whether the underlying value is an integer
 func (v *Value) IsInteger() bool {
 	return v.getResolvedValue().Kind() == reflect.Int ||
 		v.getResolvedValue().Kind() == reflect.Int8 ||
@@ -70,19 +69,19 @@ func (v *Value) IsInteger() bool {
 		v.getResolvedValue().Kind() == reflect.Uint64
 }
 
-// IsNumber checks whether the underlying value is either an integer
+// Checks whether the underlying value is either an integer
 // or a float.
 func (v *Value) IsNumber() bool {
 	return v.IsInteger() || v.IsFloat()
 }
 
-// IsNil checks whether the underlying value is NIL
+// Checks whether the underlying value is NIL
 func (v *Value) IsNil() bool {
 	//fmt.Printf("%+v\n", v.getResolvedValue().Type().String())
 	return !v.getResolvedValue().IsValid()
 }
 
-// String returns a string for the underlying value. If this value is not
+// Returns a string for the underlying value. If this value is not
 // of type string, pongo2 tries to convert it. Currently the following
 // types for underlying values are supported:
 //
@@ -112,8 +111,9 @@ func (v *Value) String() string {
 	case reflect.Bool:
 		if v.Bool() {
 			return "True"
+		} else {
+			return "False"
 		}
-		return "False"
 	case reflect.Struct:
 		if t, ok := v.Interface().(fmt.Stringer); ok {
 			return t.String()
@@ -124,7 +124,7 @@ func (v *Value) String() string {
 	return v.getResolvedValue().String()
 }
 
-// Integer returns the underlying value as an integer (converts the underlying
+// Returns the underlying value as an integer (converts the underlying
 // value, if necessary). If it's not possible to convert the underlying value,
 // it will return 0.
 func (v *Value) Integer() int {
@@ -148,7 +148,7 @@ func (v *Value) Integer() int {
 	}
 }
 
-// Float returns the underlying value as a float (converts the underlying
+// Returns the underlying value as a float (converts the underlying
 // value, if necessary). If it's not possible to convert the underlying value,
 // it will return 0.0.
 func (v *Value) Float() float64 {
@@ -172,7 +172,7 @@ func (v *Value) Float() float64 {
 	}
 }
 
-// Bool returns the underlying value as bool. If the value is not bool, false
+// Returns the underlying value as bool. If the value is not bool, false
 // will always be returned. If you're looking for true/false-evaluation of the
 // underlying value, have a look on the IsTrue()-function.
 func (v *Value) Bool() bool {
@@ -185,7 +185,7 @@ func (v *Value) Bool() bool {
 	}
 }
 
-// IsTrue tries to evaluate the underlying value the Pythonic-way:
+// Tries to evaluate the underlying value the Pythonic-way:
 //
 // Returns TRUE in one the following cases:
 //
@@ -217,7 +217,7 @@ func (v *Value) IsTrue() bool {
 	}
 }
 
-// Negate tries to negate the underlying value. It's mainly used for
+// Tries to negate the underlying value. It's mainly used for
 // the NOT-operator and in conjunction with a call to
 // return_value.IsTrue() afterwards.
 //
@@ -229,26 +229,26 @@ func (v *Value) Negate() *Value {
 		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		if v.Integer() != 0 {
 			return AsValue(0)
+		} else {
+			return AsValue(1)
 		}
-		return AsValue(1)
 	case reflect.Float32, reflect.Float64:
 		if v.Float() != 0.0 {
 			return AsValue(float64(0.0))
+		} else {
+			return AsValue(float64(1.1))
 		}
-		return AsValue(float64(1.1))
 	case reflect.Array, reflect.Chan, reflect.Map, reflect.Slice, reflect.String:
 		return AsValue(v.getResolvedValue().Len() == 0)
 	case reflect.Bool:
 		return AsValue(!v.getResolvedValue().Bool())
-	case reflect.Struct:
-		return AsValue(false)
 	default:
 		logf("Value.IsTrue() not available for type: %s\n", v.getResolvedValue().Kind().String())
 		return AsValue(true)
 	}
 }
 
-// Len returns the length for an array, chan, map, slice or string.
+// Returns the length for an array, chan, map, slice or string.
 // Otherwise it will return 0.
 func (v *Value) Len() int {
 	switch v.getResolvedValue().Kind() {
@@ -263,7 +263,7 @@ func (v *Value) Len() int {
 	}
 }
 
-// Slice slices an array, slice or string. Otherwise it will
+// Slices an array, slice or string. Otherwise it will
 // return an empty []int.
 func (v *Value) Slice(i, j int) *Value {
 	switch v.getResolvedValue().Kind() {
@@ -278,7 +278,7 @@ func (v *Value) Slice(i, j int) *Value {
 	}
 }
 
-// Index gets the i-th item of an array, slice or string. Otherwise
+// Get the i-th item of an array, slice or string. Otherwise
 // it will return NIL.
 func (v *Value) Index(i int) *Value {
 	switch v.getResolvedValue().Kind() {
@@ -301,7 +301,7 @@ func (v *Value) Index(i int) *Value {
 	}
 }
 
-// Contains checks whether the underlying value (which must be of type struct, map,
+// Checks whether the underlying value (which must be of type struct, map,
 // string, array or slice) contains of another Value (e. g. used to check
 // whether a struct contains of a specific field or a map contains a specific key).
 //
@@ -310,32 +310,25 @@ func (v *Value) Index(i int) *Value {
 func (v *Value) Contains(other *Value) bool {
 	switch v.getResolvedValue().Kind() {
 	case reflect.Struct:
-		fieldValue := v.getResolvedValue().FieldByName(other.String())
-		return fieldValue.IsValid()
+		field_value := v.getResolvedValue().FieldByName(other.String())
+		return field_value.IsValid()
 	case reflect.Map:
-		var mapValue reflect.Value
+		var map_value reflect.Value
 		switch other.Interface().(type) {
 		case int:
-			mapValue = v.getResolvedValue().MapIndex(other.getResolvedValue())
+			map_value = v.getResolvedValue().MapIndex(other.getResolvedValue())
 		case string:
-			mapValue = v.getResolvedValue().MapIndex(other.getResolvedValue())
+			map_value = v.getResolvedValue().MapIndex(other.getResolvedValue())
 		default:
 			logf("Value.Contains() does not support lookup type '%s'\n", other.getResolvedValue().Kind().String())
 			return false
 		}
 
-		return mapValue.IsValid()
+		return map_value.IsValid()
 	case reflect.String:
 		return strings.Contains(v.getResolvedValue().String(), other.String())
 
-	case reflect.Slice, reflect.Array:
-		for i := 0; i < v.getResolvedValue().Len(); i++ {
-			item := v.getResolvedValue().Index(i)
-			if other.Interface() == item.Interface() {
-				return true
-			}
-		}
-		return false
+	// TODO: reflect.Array, reflect.Slice
 
 	default:
 		logf("Value.Contains() not available for type: %s\n", v.getResolvedValue().Kind().String())
@@ -343,7 +336,7 @@ func (v *Value) Contains(other *Value) bool {
 	}
 }
 
-// CanSlice checks whether the underlying value is of type array, slice or string.
+// Checks whether the underlying value is of type array, slice or string.
 // You normally would use CanSlice() before using the Slice() operation.
 func (v *Value) CanSlice() bool {
 	switch v.getResolvedValue().Kind() {
@@ -353,7 +346,7 @@ func (v *Value) CanSlice() bool {
 	return false
 }
 
-// Iterate iterates over a map, array, slice or a string. It calls the
+// Iterates over a map, array, slice or a string. It calls the
 // function's first argument for every value with the following arguments:
 //
 //     idx      current 0-index
@@ -364,23 +357,16 @@ func (v *Value) CanSlice() bool {
 // If the underlying value has no items or is not one of the types above,
 // the empty function (function's second argument) will be called.
 func (v *Value) Iterate(fn func(idx, count int, key, value *Value) bool, empty func()) {
-	v.IterateOrder(fn, empty, false, false)
+	v.IterateOrder(fn, empty, false)
 }
 
-// IterateOrder behaves like Value.Iterate, but can iterate through an array/slice/string in reverse. Does
+// Like Value.Iterate, but can iterate through an array/slice/string in reverse. Does
 // not affect the iteration through a map because maps don't have any particular order.
-// However, you can force an order using the `sorted` keyword (and even use `reversed sorted`).
-func (v *Value) IterateOrder(fn func(idx, count int, key, value *Value) bool, empty func(), reverse bool, sorted bool) {
+func (v *Value) IterateOrder(fn func(idx, count int, key, value *Value) bool, empty func(), reverse bool) {
 	switch v.getResolvedValue().Kind() {
 	case reflect.Map:
-		keys := sortedKeys(v.getResolvedValue().MapKeys())
-		if sorted {
-			if reverse {
-				sort.Sort(sort.Reverse(keys))
-			} else {
-				sort.Sort(keys)
-			}
-		}
+		// Reverse not needed for maps, since they are not ordered
+		keys := v.getResolvedValue().MapKeys()
 		keyLen := len(keys)
 		for idx, key := range keys {
 			value := v.getResolvedValue().MapIndex(key)
@@ -393,31 +379,19 @@ func (v *Value) IterateOrder(fn func(idx, count int, key, value *Value) bool, em
 		}
 		return // done
 	case reflect.Array, reflect.Slice:
-		var items valuesList
-
 		itemCount := v.getResolvedValue().Len()
-		for i := 0; i < itemCount; i++ {
-			items = append(items, &Value{val: v.getResolvedValue().Index(i)})
-		}
-
-		if sorted {
+		if itemCount > 0 {
 			if reverse {
-				sort.Sort(sort.Reverse(items))
-			} else {
-				sort.Sort(items)
-			}
-		} else {
-			if reverse {
-				for i := 0; i < itemCount/2; i++ {
-					items[i], items[itemCount-1-i] = items[itemCount-1-i], items[i]
+				for i := itemCount - 1; i >= 0; i-- {
+					if !fn(i, itemCount, &Value{val: v.getResolvedValue().Index(i)}, nil) {
+						return
+					}
 				}
-			}
-		}
-
-		if len(items) > 0 {
-			for idx, item := range items {
-				if !fn(idx, itemCount, item, nil) {
-					return
+			} else {
+				for i := 0; i < itemCount; i++ {
+					if !fn(i, itemCount, &Value{val: v.getResolvedValue().Index(i)}, nil) {
+						return
+					}
 				}
 			}
 		} else {
@@ -425,12 +399,7 @@ func (v *Value) IterateOrder(fn func(idx, count int, key, value *Value) bool, em
 		}
 		return // done
 	case reflect.String:
-		if sorted {
-			// TODO(flosch): Handle sorted
-			panic("TODO: handle sort for type string")
-		}
-
-		// TODO(flosch): Not utf8-compatible (utf8-decoding necessary)
+		// TODO: Not utf8-compatible (utf8-decoding neccessary)
 		charCount := v.getResolvedValue().Len()
 		if charCount > 0 {
 			if reverse {
@@ -456,7 +425,7 @@ func (v *Value) IterateOrder(fn func(idx, count int, key, value *Value) bool, em
 	empty()
 }
 
-// Interface gives you access to the underlying value.
+// Gives you access to the underlying value.
 func (v *Value) Interface() interface{} {
 	if v.val.IsValid() {
 		return v.val.Interface()
@@ -464,57 +433,7 @@ func (v *Value) Interface() interface{} {
 	return nil
 }
 
-// EqualValueTo checks whether two values are containing the same value or object.
+// Checks whether two values are containing the same value or object.
 func (v *Value) EqualValueTo(other *Value) bool {
-	// comparison of uint with int fails using .Interface()-comparison (see issue #64)
-	if v.IsInteger() && other.IsInteger() {
-		return v.Integer() == other.Integer()
-	}
 	return v.Interface() == other.Interface()
-}
-
-type sortedKeys []reflect.Value
-
-func (sk sortedKeys) Len() int {
-	return len(sk)
-}
-
-func (sk sortedKeys) Less(i, j int) bool {
-	vi := &Value{val: sk[i]}
-	vj := &Value{val: sk[j]}
-	switch {
-	case vi.IsInteger() && vj.IsInteger():
-		return vi.Integer() < vj.Integer()
-	case vi.IsFloat() && vj.IsFloat():
-		return vi.Float() < vj.Float()
-	default:
-		return vi.String() < vj.String()
-	}
-}
-
-func (sk sortedKeys) Swap(i, j int) {
-	sk[i], sk[j] = sk[j], sk[i]
-}
-
-type valuesList []*Value
-
-func (vl valuesList) Len() int {
-	return len(vl)
-}
-
-func (vl valuesList) Less(i, j int) bool {
-	vi := vl[i]
-	vj := vl[j]
-	switch {
-	case vi.IsInteger() && vj.IsInteger():
-		return vi.Integer() < vj.Integer()
-	case vi.IsFloat() && vj.IsFloat():
-		return vi.Float() < vj.Float()
-	default:
-		return vi.String() < vj.String()
-	}
-}
-
-func (vl valuesList) Swap(i, j int) {
-	vl[i], vl[j] = vl[j], vl[i]
 }

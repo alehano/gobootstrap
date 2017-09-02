@@ -395,6 +395,7 @@ func TestNormalizeEmail(t *testing.T) {
 		{`some.name.midd.lena.me.+extension@googlemail.com`, `somenamemiddlename@gmail.com`},
 		{`some.name+extension@unknown.com`, `some.name+extension@unknown.com`},
 		{`hans@m端ller.com`, `hans@m端ller.com`},
+		{`hans`, ``},
 	}
 	for _, test := range tests {
 		actual, err := NormalizeEmail(test.param)
@@ -416,11 +417,84 @@ func TestTruncate(t *testing.T) {
 		{`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`, 25, `...`, `Lorem ipsum dolor sit amet...`},
 		{`Measuring programming progress by lines of code is like measuring aircraft building progress by weight.`, 35, ` new born babies!`, `Measuring programming progress by new born babies!`},
 		{`Testestestestestestestestestest testestestestestestestestest`, 7, `...`, `Testestestestestestestestestest...`},
+		{`Testing`, 7, `...`, `Testing`},
 	}
 	for _, test := range tests {
 		actual := Truncate(test.param1, test.param2, test.param3)
 		if actual != test.expected {
 			t.Errorf("Expected Truncate(%q, %d, %q) to be %v, got %v", test.param1, test.param2, test.param3, test.expected, actual)
+		}
+	}
+}
+
+func TestPadLeft(t *testing.T) {
+	t.Parallel()
+
+	var tests = []struct {
+		param1   string
+		param2   string
+		param3   int
+		expected string
+	}{
+		{"こんにちは", "xyz", 12, "xyzxyzxこんにちは"},
+		{"こんにちは", "xyz", 11, "xyzxyzこんにちは"},
+		{"abc", "x", 5, "xxabc"},
+		{"abc", "xyz", 5, "xyabc"},
+		{"abcde", "xyz", 5, "abcde"},
+		{"abcde", "xyz", 4, "abcde"},
+	}
+	for _, test := range tests {
+		actual := PadLeft(test.param1, test.param2, test.param3)
+		if actual != test.expected {
+			t.Errorf("Expected PadLeft(%q,%q,%q) to be %v, got %v", test.param1, test.param2, test.param3, test.expected, actual)
+		}
+	}
+}
+
+func TestPadRight(t *testing.T) {
+	t.Parallel()
+
+	var tests = []struct {
+		param1   string
+		param2   string
+		param3   int
+		expected string
+	}{
+		{"こんにちは", "xyz", 12, "こんにちはxyzxyzx"},
+		{"こんにちは", "xyz", 11, "こんにちはxyzxyz"},
+		{"abc", "x", 5, "abcxx"},
+		{"abc", "xyz", 5, "abcxy"},
+		{"abcde", "xyz", 5, "abcde"},
+		{"abcde", "xyz", 4, "abcde"},
+	}
+	for _, test := range tests {
+		actual := PadRight(test.param1, test.param2, test.param3)
+		if actual != test.expected {
+			t.Errorf("Expected PadRight(%q,%q,%q) to be %v, got %v", test.param1, test.param2, test.param3, test.expected, actual)
+		}
+	}
+}
+
+func TestPadBoth(t *testing.T) {
+	t.Parallel()
+
+	var tests = []struct {
+		param1   string
+		param2   string
+		param3   int
+		expected string
+	}{
+		{"こんにちは", "xyz", 12, "xyzこんにちはxyzx"},
+		{"こんにちは", "xyz", 11, "xyzこんにちはxyz"},
+		{"abc", "x", 5, "xabcx"},
+		{"abc", "xyz", 5, "xabcx"},
+		{"abcde", "xyz", 5, "abcde"},
+		{"abcde", "xyz", 4, "abcde"},
+	}
+	for _, test := range tests {
+		actual := PadBoth(test.param1, test.param2, test.param3)
+		if actual != test.expected {
+			t.Errorf("Expected PadBoth(%q,%q,%q) to be %v, got %v", test.param1, test.param2, test.param3, test.expected, actual)
 		}
 	}
 }

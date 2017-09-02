@@ -1,5 +1,22 @@
 # Changelog
 
+## v3.2.1 (2017-08-31)
+
+- Add new `Match(rctx *Context, method, path string) bool` method to `Routes` interface
+  and `Mux`. Match searches the mux's routing tree for a handler that matches the method/path
+- Add new `RouteMethod` to `*Context`
+- Add new `Routes` pointer to `*Context`
+- Add new `middleware.GetHead` to route missing HEAD requests to GET handler
+- Updated benchmarks (see README)
+
+
+## v3.1.5 (2017-08-02)
+
+- Setup golint and go vet for the project
+- As per golint, we've redefined `func ServerBaseContext(h http.Handler, baseCtx context.Context) http.Handler`
+  to `func ServerBaseContext(baseCtx context.Context, h http.Handler) http.Handler`
+
+
 ## v3.1.0 (2017-07-10)
 
 - Fix a few minor issues after v3 release
