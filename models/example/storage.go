@@ -1,7 +1,7 @@
 package example
 
 // Interface to store data in DB
-type ExampleStorage interface {
+type Storage interface {
 	DBInit() error
 	Create(item ExampleModel) (int, error)
 	Get(id int) (ExampleModel, error)

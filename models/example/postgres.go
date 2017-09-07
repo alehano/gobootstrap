@@ -8,7 +8,7 @@ import (
 )
 
 // Implementation of Storage interface
-func NewPostgresStorage() ExampleStorage {
+func NewPostgresStorage() Storage {
 	s := postgresStorage{
 		db:    postgres.GetDB(),
 		table: tableName,

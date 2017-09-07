@@ -6,7 +6,7 @@ import (
 	"github.com/alehano/gobootstrap/sys/memcache"
 )
 
-func NewExampleMan(storage ExampleStorage) Manager {
+func NewExampleMan(storage Storage) Manager {
 	return Manager{storage: storage}
 }
 
@@ -14,7 +14,7 @@ func NewExampleMan(storage ExampleStorage) Manager {
 Use manager to get|set data
  */
 type Manager struct {
-	storage ExampleStorage
+	storage Storage
 }
 
 func (m Manager) Create(item ExampleModel) (int, error) {
