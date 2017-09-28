@@ -5,6 +5,7 @@ import (
 	"github.com/alehano/gobootstrap/sys/cmd"
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/yaml.v2"
 )
 
 func init() {
@@ -14,6 +15,19 @@ func init() {
 		Short: "Show version",
 		Run: func(cmd *cobra.Command, args []string) {
 			log.Printf("Version: %s\n", Version)
+		},
+	})
+
+	cmd.RootCmd.AddCommand(&cobra.Command{
+		Use:   "dumpconfig",
+		Short: "Print config",
+		Run: func(cmd *cobra.Command, args []string) {
+			out, err := yaml.Marshal(Get())
+			if err != nil {
+				log.Println(err)
+			} else {
+				log.Println(string(out))
+			}
 		},
 	})
 
