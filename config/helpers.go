@@ -1,5 +1,5 @@
 package config
 
-func WebsiteURL() string {
-	return Get().WebsiteProtocol+Get().WebsiteDomain
+func (c cfg) WebsiteURL() string {
+	return c.WebsiteProtocol + c.WebsiteDomain
 }

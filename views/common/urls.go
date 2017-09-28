@@ -18,5 +18,5 @@ func urlGroup(r chi.Router) {
 	r.NotFound(notFound)
 
 	r.Get("/robots.txt", tpl.RenderHandler("common.robots_txt",
-		tpl.D{"host": config.WebsiteURL()}))
+		tpl.D{"host": config.Get().WebsiteURL()}))
 }
