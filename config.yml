@@ -1,0 +1,9 @@
+debug: true
+port: 8001
+project_path: "/Users/alehano/Development/go/src/github.com/alehano/gobootstrap"
+lang: "en"
+website_protocol: "https://"
+website_domain: "example.com"
+admin_login: "admin"
+admin_password_hash: "$2a$10$5gCLP.GlOVBVFLtrzhoxfO5wsT0eiH7IsjzupA7ukTyI/znLFotHu" # password is "admin"
+jwt_secret: "change_me"
